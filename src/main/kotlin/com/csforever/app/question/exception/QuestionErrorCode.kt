@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus
 
 enum class QuestionErrorCode(val code: String, val message: String, var status: Int) : ErrorCode {
 
-    QUESTION_NOT_FOUND("B01", "BOOK_NOT_FOUND", HttpStatus.BAD_REQUEST.value()),
+    QUESTION_NOT_FOUND("Q01", "BOOK_NOT_FOUND", HttpStatus.NOT_FOUND.value()),
+    ANSWER_LENGTH_TOO_SHORT("Q02", "ANSWER_LENGTH_TOO_SHORT", HttpStatus.BAD_REQUEST.value()),
     ;
 
     override fun getCodeValue(): String {

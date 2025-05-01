@@ -17,6 +17,8 @@ class QuestionCommandController(
 
     @PostMapping
     suspend fun submit(@RequestBody request: QuestionCommandRequest.QuestionSubmitRequest): ResponseEntity<QuestionCommandResponse.QuestionSubmitResponse> {
+        request.validateAnswerLength()
+        
         val response = questionCommandService.submitQuestion(request, 1)
 
         return ResponseEntity.ok(response)
