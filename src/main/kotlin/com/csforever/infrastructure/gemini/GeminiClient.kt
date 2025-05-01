@@ -32,9 +32,7 @@ class GeminiClient(
             .awaitSingle()
 
         val jsonText = command.extractFunc(response)
-
-        print(jsonText)
-
+        
         return objectMapper.readValue(jsonText, command.returnType)
     }
 }
