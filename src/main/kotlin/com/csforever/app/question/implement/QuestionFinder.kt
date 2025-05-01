@@ -10,8 +10,11 @@ import org.springframework.stereotype.Component
 class QuestionFinder(
     private val questionDao: QuestionDao
 ) {
-
     suspend fun findById(questionId: Long): Question {
         return questionDao.findById(questionId) ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
+    }
+
+    suspend fun findRandomByTags(tags: List<String>): Question {
+        return questionDao.findRandomByTag(tags) ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
     }
 }
