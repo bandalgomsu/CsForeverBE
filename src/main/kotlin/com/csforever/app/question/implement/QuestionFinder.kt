@@ -1,4 +1,17 @@
 package com.csforever.app.question.implement
 
-class QuestionFinder {
+import com.csforever.app.common.exception.BusinessException
+import com.csforever.app.question.dao.QuestionDao
+import com.csforever.app.question.exception.QuestionErrorCode
+import com.csforever.app.question.model.Question
+import org.springframework.stereotype.Component
+
+@Component
+class QuestionFinder(
+    private val questionDao: QuestionDao
+) {
+
+    suspend fun findById(questionId: Long): Question {
+        return questionDao.findById(questionId) ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
+    }
 }

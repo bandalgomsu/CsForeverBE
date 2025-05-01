@@ -30,6 +30,9 @@ dependencies {
     //Env
     implementation("me.paulschwarz:spring-dotenv:4.0.0")
 
+    //Swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.7.0")
+
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("io.asyncer:r2dbc-mysql")
 
