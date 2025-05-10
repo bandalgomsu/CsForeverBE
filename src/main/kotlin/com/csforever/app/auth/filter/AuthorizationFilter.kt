@@ -30,7 +30,7 @@ class AuthorizationFilter(
             if (request.method.name() == "OPTIONS") {
                 return@mono chain.filter(exchange).awaitSingleOrNull()
             }
-            
+
             val isAuthRequest = authPaths.any { it in request.path.value() }
 
             val token = request.headers.getFirst("Authorization")
@@ -41,7 +41,7 @@ class AuthorizationFilter(
             val authorization = tokenHandler.extractToken(token)
 
             if (isAuthRequest) {
-                authorization.userId ?: return@mono handleAuthException(
+                authorization.user ?: return@mono handleAuthException(
                     exchange,
                     BusinessException(AuthErrorCode.NOT_LOGIN_USER)
                 ).awaitSingleOrNull()

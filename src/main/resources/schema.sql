@@ -23,3 +23,16 @@ CREATE TABLE IF NOT EXISTS users
     updated_at timestamp(6),
     primary key (id)
 );
+
+CREATE TABLE IF NOT EXISTS submission
+(
+    id          bigint       not null AUTO_INCREMENT,
+    user_id     bigint       not null,
+    question_id bigint       not null,
+    answer      varchar(300) not null,
+    is_correct  boolean      not null,
+    feedback    varchar(600),
+    created_at  timestamp(6),
+    updated_at  timestamp(6),
+    primary key (id)
+);

@@ -23,7 +23,7 @@ class LLMQuestionSubmitCommand(
             다음 형식의 JSON만 출력해주세요:
 
             {
-              "isAnswer": Boolean,  // 답변이 정확하면 true, 그렇지 않으면 false
+              "isCorrect": Boolean,  // 답변이 정확하면 true, 그렇지 않으면 false
               "feedback": String    // 왜 정확/부정확한지에 대한 설명과 모범 답안을 제시
             }
              

@@ -11,6 +11,8 @@ class QuestionCommandRequest {
         fun validateAnswerLength() {
             if (answer.length < 10) {
                 throw BusinessException(QuestionErrorCode.ANSWER_LENGTH_TOO_SHORT)
+            } else if (answer.length > 300) {
+                throw BusinessException(QuestionErrorCode.ANSWER_LENGTH_TOO_LONG)
             }
         }
     }

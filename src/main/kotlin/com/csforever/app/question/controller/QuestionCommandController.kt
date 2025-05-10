@@ -1,5 +1,7 @@
 package com.csforever.app.question.controller
 
+import com.csforever.app.auth.annotation.AuthorizationContext
+import com.csforever.app.auth.model.UserAuthorizationContext
 import com.csforever.app.question.dto.QuestionCommandRequest
 import com.csforever.app.question.dto.QuestionCommandResponse
 import com.csforever.app.question.service.QuestionCommandService
@@ -16,10 +18,13 @@ class QuestionCommandController(
 ) {
 
     @PostMapping
-    suspend fun submit(@RequestBody request: QuestionCommandRequest.QuestionSubmitRequest): ResponseEntity<QuestionCommandResponse.QuestionSubmitResponse> {
+    suspend fun submit(
+        @RequestBody request: QuestionCommandRequest.QuestionSubmitRequest,
+        @AuthorizationContext authorizationContext: UserAuthorizationContext
+    ): ResponseEntity<QuestionCommandResponse.QuestionSubmitResponse> {
         request.validateAnswerLength()
-        
-        val response = questionCommandService.submitQuestion(request, 1)
+
+        val response = questionCommandService.submitQuestion(request, authorizationContext.user)
 
         return ResponseEntity.ok(response)
     }

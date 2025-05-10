@@ -6,7 +6,11 @@ import com.csforever.app.auth.model.EmailVerificationPrefix
 import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.common.mail.MailValidator
 import com.csforever.app.common.redis.RedisClient
-import kotlinx.coroutines.*
+import com.csforever.app.common.scope.CustomScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Component
@@ -16,7 +20,6 @@ class EmailVerificationHandler(
     private val redisClient: RedisClient,
     private val mailSender: JavaMailSender
 ) {
-
     suspend fun sendSignUpVerificationEmail(email: String, code: String): Boolean {
         MailValidator.validateEmail(email)
 
@@ -30,7 +33,7 @@ class EmailVerificationHandler(
         sendMail(email, title, content, code)
 
         redisClient.deleteData(EmailVerificationPrefix.SIGN_UP.createKey(email))
-        
+
         return redisClient.setData(
             EmailVerificationPrefix.SIGN_UP.createKey(email), code, 180
         )
@@ -46,7 +49,7 @@ class EmailVerificationHandler(
         helper.setTo(toMail)
         helper.setSubject(title)
         helper.setText(content, true)
-        CoroutineScope(Dispatchers.IO + Job()).launch {
+        CustomScope.fireAndForget.launch {
             mailSender.send(message)
         }
     }

@@ -20,7 +20,7 @@ class TokenHandler(
 
         redisClient.setData(
             "session:$token",
-            UserAuthorizationContext(userId = user.id!!, role = user.role),
+            UserAuthorizationContext(user = user, role = user.role),
             expireSeconds
         )
 
