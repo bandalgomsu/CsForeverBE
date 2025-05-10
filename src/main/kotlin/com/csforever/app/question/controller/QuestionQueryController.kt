@@ -1,6 +1,7 @@
 package com.csforever.app.question.controller
 
 import com.csforever.app.question.dto.QuestionQueryResponse
+import com.csforever.app.question.model.QuestionTag
 import com.csforever.app.question.service.QuestionQueryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,7 +16,7 @@ class QuestionQueryController(
 ) {
 
     @GetMapping
-    suspend fun findRandomByTags(@RequestParam tags: List<String>): ResponseEntity<QuestionQueryResponse.QuestionInfo> {
+    suspend fun findRandomByTags(@RequestParam tags: List<QuestionTag>): ResponseEntity<QuestionQueryResponse.QuestionInfo> {
         val response = questionQueryService.findRandomByTags(tags)
 
         return ResponseEntity.ok(response)

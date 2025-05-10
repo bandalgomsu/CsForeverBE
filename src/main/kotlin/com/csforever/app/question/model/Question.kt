@@ -6,7 +6,7 @@ class Question(
     val id: Long? = null,
     val question: String,
     val bestAnswer: String,
-    val tag: String,
+    val tag: QuestionTag,
 ) {
     fun toInfo(): QuestionQueryResponse.QuestionInfo {
         return QuestionQueryResponse.QuestionInfo(

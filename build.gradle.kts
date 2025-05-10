@@ -33,6 +33,13 @@ dependencies {
     //Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.7.0")
 
+    //Cryto
+    implementation("org.springframework.security:spring-security-crypto:6.4.4")
+
+    //Mail
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("commons-validator:commons-validator:1.7")
+
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("io.asyncer:r2dbc-mysql")
 
