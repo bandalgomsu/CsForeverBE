@@ -53,7 +53,7 @@ class UserProfileService(
                 questionId = question.id!!,
                 userId = submission.userId,
                 question = question.question,
-                tag = question.tag.name,
+                tag = question.tag.displayName,
                 answer = submission.answer,
                 feedback = submission.feedback,
                 isCorrect = submission.isCorrect,
