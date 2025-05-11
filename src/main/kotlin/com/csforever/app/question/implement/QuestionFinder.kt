@@ -18,4 +18,8 @@ class QuestionFinder(
     suspend fun findRandomByTags(tags: List<QuestionTag>): Question {
         return questionDao.findRandomByTag(tags) ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
     }
+
+    suspend fun findAllByIdIn(questionIds: List<Long>): List<Question> {
+        return questionDao.findAllByIdIn(questionIds)
+    }
 }

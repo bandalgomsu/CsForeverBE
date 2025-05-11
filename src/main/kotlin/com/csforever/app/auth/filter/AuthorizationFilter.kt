@@ -6,6 +6,7 @@ import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.common.exception.CommonErrorCode
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.reactor.mono
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -17,11 +18,9 @@ import reactor.core.publisher.Mono
 @Component
 class AuthorizationFilter(
     private val tokenHandler: TokenHandler,
+    @Value("\${auth.paths}")
+    private val authPaths: List<String>
 ) : WebFilter {
-
-    private val authPaths = listOf(
-        "/api/v1/questions",
-    )
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         return mono {

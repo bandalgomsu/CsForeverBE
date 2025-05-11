@@ -13,7 +13,7 @@ import java.util.*
 @Component
 class TokenHandler(
     private val redisClient: RedisClient,
-    @Value("\${token.expiration}") private val expireSeconds: Long,
+    @Value("\${auth.token.expiration}") private val expireSeconds: Long,
 ) {
     suspend fun generate(user: User): TokenResponse {
         val token = UUID.randomUUID().toString()

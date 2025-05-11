@@ -24,5 +24,11 @@ class QuestionEntityRepository(
             .first()
             .toModel()
     }
+
+    override suspend fun findAllByIdIn(questionIds: List<Long>): List<Question> {
+        return questionCoroutineRepository.findAllByIdIn(questionIds)
+            .toList()
+            .map { it.toModel() }
+    }
 }
 

@@ -56,7 +56,7 @@ llm:
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
-jwt:
-  key: ${JWT_KEY}
-  access:
+auth:
+  token:
     expiration: ${ACCESS_EXP}
+  paths: "/api/v1/user/profile"

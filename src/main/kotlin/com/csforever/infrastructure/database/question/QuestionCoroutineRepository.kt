@@ -16,4 +16,6 @@ interface QuestionCoroutineRepository : CoroutineCrudRepository<QuestionEntity, 
     """
     )
     suspend fun findPageByTagIn(size: Int, offset: Int, tags: List<QuestionTag>): Flow<QuestionEntity>
+
+    suspend fun findAllByIdIn(questionIds: List<Long>): Flow<QuestionEntity>
 }

@@ -57,5 +57,7 @@ llm:
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
-token:
-  expiration: ${ACCESS_EXP}
+auth:
+  token:
+    expiration: ${ACCESS_EXP}
+  paths: "/api/v1/user/profile"
