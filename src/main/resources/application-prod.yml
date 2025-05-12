@@ -60,4 +60,4 @@ cors:
 auth:
   token:
     expiration: ${ACCESS_EXP}
-  paths: "/api/v1/user/profile"
+  paths: ${AUTH_PATHS}

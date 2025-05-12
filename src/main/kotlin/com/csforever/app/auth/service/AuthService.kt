@@ -36,6 +36,10 @@ class AuthService(
         return tokenHandler.generate(user)
     }
 
+    suspend fun logout(token: String) {
+        tokenHandler.deleteToken(token)
+    }
+
     suspend fun sendSignUpVerificationEmail(email: String) {
         emailVerificationHandler.sendSignUpVerificationEmail(email, RandomNumberGenerator.generateRandomNumber(6))
     }

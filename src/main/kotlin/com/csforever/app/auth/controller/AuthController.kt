@@ -1,8 +1,10 @@
 package com.csforever.app.auth.controller
 
+import com.csforever.app.auth.annotation.AuthorizationContext
 import com.csforever.app.auth.dto.AuthRequest
 import com.csforever.app.auth.dto.AuthResponse
 import com.csforever.app.auth.dto.TokenResponse
+import com.csforever.app.auth.model.UserAuthorizationContext
 import com.csforever.app.auth.service.AuthService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -18,6 +20,13 @@ class AuthController(
         val response = authService.login(request)
 
         return ResponseEntity.ok(response)
+    }
+
+    @DeleteMapping("/logout")
+    suspend fun logout(@AuthorizationContext userAuthorizationContext: UserAuthorizationContext): ResponseEntity<Unit> {
+        authService.logout(userAuthorizationContext.token!!)
+
+        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/mail/{email}")

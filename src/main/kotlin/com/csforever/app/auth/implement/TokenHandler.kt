@@ -20,7 +20,7 @@ class TokenHandler(
 
         redisClient.setData(
             "session:$token",
-            UserAuthorizationContext(user = user, role = user.role),
+            UserAuthorizationContext(user = user, role = user.role, token = token),
             expireSeconds
         )
 
@@ -43,5 +43,9 @@ class TokenHandler(
         redisClient.setData("session:$token", authorization, expireSeconds)
 
         return authorization
+    }
+
+    suspend fun deleteToken(token: String) {
+        redisClient.deleteData("session:$token")
     }
 }
