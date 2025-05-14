@@ -41,7 +41,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker buildx build --platform linux/arm64 -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }} --push .
 
-      - name: SSH 키 저장
+      - name: Load SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY_WAS1 }}" > ~/.ssh/SSH_KEY_WAS1.key
@@ -59,7 +59,7 @@ jobs:
           chmod 600 ~/.oci/config ~/.oci/oci_api_key.pem
           echo "$HOME/bin" >> $GITHUB_PATH
 
-      - name: 롤링 배포 실행
+      - name: Prod
         env:
           SERVER_CONFIG: ${{ secrets.SERVER_CONFIG }}
           LB_OCID: ${{ secrets.LB_OCID }}
@@ -78,14 +78,9 @@ jobs:
             ip=$(yq e ".\"$name\".ip" server-config.yaml)
             keyname=$(yq e ".\"$name\".key" server-config.yaml)
 
-            echo ">>> $name ($ip) 배포 시작"
+            echo ">>> $name prod start ! ! !"
 
-            echo "[1] 로드밸런서에서 제외 중 (weight 0)"
-            oci lb backend list \
-              --load-balancer-id $LB_OCID \
-              --backend-set-name $BACKEND_SET \
-              --query "data[*].\"name\"" \
-              --output table
+            echo "[1] lb offline"
           
             oci lb backend update \
               --load-balancer-id $LB_OCID \
@@ -96,7 +91,7 @@ jobs:
               --drain false \
               --offline true
           
-            echo "[2] SSH로 애플리케이션 배포"
+            echo "[2] prod"
             ssh -o StrictHostKeyChecking=no -i ~/.ssh/${keyname}.key ubuntu@$ip "
               sudo docker stop ${{ secrets.SERVICE_NAME }}
               sudo docker rm ${{ secrets.SERVICE_NAME }}
@@ -105,10 +100,10 @@ jobs:
               sudo docker run -i -t --env-file ./.env -p 8081:8081 -d --name ${{ secrets.SERVICE_NAME }} ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}:latest
             "
           
-            echo "[3] 헬스체크 대기 (30초)"
+            echo "[3] wait health check (30s)"
             sleep 30
 
-            echo "[4] 로드밸런서에 복원 중 (weight 1)"
+            echo "[4] restore lb (weight 1)"
             oci lb backend update \
               --load-balancer-id $LB_OCID \
               --backend-set-name $BACKEND_SET \
@@ -118,7 +113,7 @@ jobs:
               --drain false \
               --offline false
           
-            echo "✅ $name 배포 완료"
+            echo "$name prod complete"
                     done
 
     

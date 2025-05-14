@@ -13,7 +13,6 @@ class HealthCheckController {
     @Hidden
     @GetMapping("/")
     suspend fun healthCheck(): String {
-        logger.info("HEALTH CHECK")
         return "OK"
     }
 }
