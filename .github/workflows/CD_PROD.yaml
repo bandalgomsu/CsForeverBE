@@ -1,0 +1,127 @@
+name: CD_PROD_ROLLING
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build With Gradle
+        run: ./gradlew build -x test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker build & Push
+        run: |
+          docker login -u ${{ secrets.DOCKER_ID }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker buildx build --platform linux/arm64 -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }} --push .
+
+      - name: SSH 키 저장
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY_WAS1 }}" > ~/.ssh/SSH_KEY_WAS1.key
+          echo "${{ secrets.SSH_KEY_WAS2 }}" > ~/.ssh/SSH_KEY_WAS2.key
+          echo "${{ secrets.SSH_KEY_WAS3 }}" > ~/.ssh/SSH_KEY_WAS3.key
+          chmod 600 ~/.ssh/*.key
+
+      - name: Install OCI CLI (Python 방식)
+        run: |
+          curl -O https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.py
+          python3 install.py --accept-all-defaults --exec-dir ~/bin --install-dir ~/lib
+          mkdir -p ~/.oci
+          echo "${{ secrets.OCI_CONFIG }}" > ~/.oci/config
+          echo "${{ secrets.OCI_API_KEY }}" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/config ~/.oci/oci_api_key.pem
+          echo "$HOME/bin" >> $GITHUB_PATH
+
+      - name: 롤링 배포 실행
+        env:
+          SERVER_CONFIG: ${{ secrets.SERVER_CONFIG }}
+          LB_OCID: ${{ secrets.LB_OCID }}
+          BACKEND_SET: ${{ secrets.BACKEND_SET_NAME }}
+        run: |
+          echo "$SERVER_CONFIG" > server-config.yaml
+
+          YQ_VERSION=v4.40.5
+          wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -O /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+          yq --version
+          
+          export PATH=$PATH:~/bin
+
+          for name in $(yq e 'keys | .[]' server-config.yaml); do
+            ip=$(yq e ".\"$name\".ip" server-config.yaml)
+            keyname=$(yq e ".\"$name\".key" server-config.yaml)
+
+            echo ">>> $name ($ip) 배포 시작"
+
+            echo "[1] 로드밸런서에서 제외 중 (weight 0)"
+            oci lb backend list \
+              --load-balancer-id $LB_OCID \
+              --backend-set-name $BACKEND_SET \
+              --query "data[*].\"name\"" \
+              --output table
+          
+            oci lb backend update \
+              --load-balancer-id $LB_OCID \
+              --backend-set-name $BACKEND_SET \
+              --backend-name "$ip:8081" \
+              --weight 1 \
+              --backup false \
+              --drain false \
+              --offline true
+          
+            echo "[2] SSH로 애플리케이션 배포"
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/${keyname}.key ubuntu@$ip "
+              sudo docker stop ${{ secrets.SERVICE_NAME }}
+              sudo docker rm ${{ secrets.SERVICE_NAME }}
+              sudo docker rmi $(sudo docker images -q)
+              sudo docker pull ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}
+              sudo docker run -i -t --env-file ./.env -p 8081:8081 -d --name ${{ secrets.SERVICE_NAME }} ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}:latest
+            "
+          
+            echo "[3] 헬스체크 대기 (30초)"
+            sleep 30
+
+            echo "[4] 로드밸런서에 복원 중 (weight 1)"
+            oci lb backend update \
+              --load-balancer-id $LB_OCID \
+              --backend-set-name $BACKEND_SET \
+              --backend-name "$ip:8081" \
+              --weight 1 \
+              --backup false \
+              --drain false \
+              --offline false
+          
+            echo "✅ $name 배포 완료"
+                    done
+
+    
+
+      
+      
