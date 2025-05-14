@@ -33,17 +33,16 @@ class QuestionCommandService(
 
         val response = llmClient.requestByCommand(command)
 
-        user?.let {
-            CustomScope.fireAndForget.launch {
-                submissionInserter.insert(
-                    userId = user.id!!,
-                    questionId = question.id!!,
-                    answer = request.answer,
-                    isCorrect = response.isCorrect,
-                    feedback = response.feedback
-                )
-            }
+        CustomScope.fireAndForget.launch {
+            submissionInserter.insert(
+                userId = user?.id ?: 0, // 게스트의 user_id = 0 이라 하자
+                questionId = question.id!!,
+                answer = request.answer,
+                isCorrect = response.isCorrect,
+                feedback = response.feedback
+            )
         }
+
 
         return response
     }
