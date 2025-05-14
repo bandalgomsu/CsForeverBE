@@ -41,15 +41,7 @@ server:
 
 springdoc:
   swagger-ui:
-    path: /swagger-ui/swagger-ui.html
-    operationsSorter: method
-    disable-swagger-default-url: true
-    display-request-duration: true
-  api-docs:
-    path: /swagger-ui/api-docs
-  show-actuator: true
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
+    enabled: false
 
 llm:
   api:
