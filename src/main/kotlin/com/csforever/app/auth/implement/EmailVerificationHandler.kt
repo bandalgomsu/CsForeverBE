@@ -40,7 +40,7 @@ class EmailVerificationHandler(
     }
 
     private suspend fun sendMail(toMail: String, title: String, content: String, code: String) {
-        val fromMail = "maildevgogo@gmail.com"
+        val fromMail = "no-reply@cs-forever.xyz"
 
         val message = mailSender.createMimeMessage()
         val helper = MimeMessageHelper(message, true, "utf-8")
