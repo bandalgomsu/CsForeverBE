@@ -1,6 +1,8 @@
 package com.csforever.app.user.service
 
+import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.common.pagination.PageResponse
+import com.csforever.app.question.exception.QuestionErrorCode
 import com.csforever.app.question.implement.QuestionFinder
 import com.csforever.app.submission.implement.SubmissionCounter
 import com.csforever.app.submission.implement.SubmissionFinder
@@ -47,7 +49,11 @@ class UserProfileService(
         val questionMap = questions.associateBy { it.id }
 
         val results = submissionPage.results.map { submission ->
-            val question = questionMap[submission.questionId]!!
+            val question = questionMap[submission.questionId] ?: throw BusinessException(
+                "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIds} , user_id : ${user.id} ",
+                QuestionErrorCode.QUESTION_NOT_FOUND
+            )
+
             UserProfileResponse.UserProfileSubmission(
                 submissionId = submission.id!!,
                 questionId = question.id!!,
