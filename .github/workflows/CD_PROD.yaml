@@ -68,7 +68,7 @@ jobs:
               sudo docker rm ${{ secrets.SERVICE_NAME }}
               sudo docker rmi $(sudo docker images -q)
               sudo docker pull ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}
-              sudo docker run -i -t --log-driver=json-file --log-opt max-size=10m --log-opt max-file=2 --env-file ./.env -p 8081:8081 -d --name ${{ secrets.SERVICE_NAME }} ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}:latest
+              sudo docker run -i -t --log-driver=fluentd --log-opt fluentd-address=localhost:24224 --log-opt tag=${{ secrets.SERVICE_NAME }} --env-file ./.env -p 8081:8081 -d --name ${{ secrets.SERVICE_NAME }} ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}:latest
             "
           
             echo "[3] wait health check (30s)"
@@ -86,8 +86,26 @@ jobs:
           
             echo "$name prod complete"
                     done
+  
+  
+  
+  [ SERVICE ]
+  Flush        5
+  Log_Level    info
+  Daemon       Off
+  
+  [ INPUT ]
+  Name         forward
+  Listen       0.0.0.0
+  Port         24224
+  
+  [ OUTPUT ]
+  Name         http
+  Match        *
+  Host         s1312468.eu-nbg-2.betterstackdata.com
+  Port         443
+  URI          /
+  Format       json
+  Header       Authorization Bearer tJhbveeWDmJavH8vK4cmHzG4
+  tls          On
 
-    
-
-      
-      
