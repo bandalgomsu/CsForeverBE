@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS submission
     question_id bigint       not null,
     answer      varchar(300) not null,
     is_correct  boolean      not null,
-    feedback    varchar(600),
+    feedback    varchar(1000),
     created_at  timestamp(6),
     updated_at  timestamp(6),
     primary key (id)

@@ -3,6 +3,12 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    pool:
+      enabled: true
+      initial-size: 5
+      max-idle-time: 30m
+      max-life-time: 1h
+      max-size: 20
   sql:
     init:
       mode: always
