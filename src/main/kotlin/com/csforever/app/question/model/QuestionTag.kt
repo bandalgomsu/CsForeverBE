@@ -16,5 +16,10 @@ enum class QuestionTag(val displayName: String) {
     NETWORK("Network"),
     DESIGN_PATTERN("Design Pattern"),
     SW_ENGINEERING("SW Engineering"),
-    DEVOPS("DevOps");
+    DEVOPS("DevOps"),
+    PYTHON("Python"),
+    R("R"),
+    C_PLUS_PLUS("C++"),
+    UNITY("Unity"),
+    ;
 }
