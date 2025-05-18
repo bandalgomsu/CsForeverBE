@@ -48,25 +48,27 @@ class UserProfileService(
 
         val questionMap = questions.associateBy { it.id }
 
-        val results = submissionPage.results.map { submission ->
-            val question = questionMap[submission.questionId] ?: throw BusinessException(
-                "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIds} , user_id : ${user.id} ",
-                QuestionErrorCode.QUESTION_NOT_FOUND
-            )
+        val results = submissionPage.results
+            .filter { it.questionId in questionMap.keys }
+            .map { submission ->
+                val question = questionMap[submission.questionId] ?: throw BusinessException(
+                    "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIds} , user_id : ${user.id} ",
+                    QuestionErrorCode.QUESTION_NOT_FOUND
+                )
 
-            UserProfileResponse.UserProfileSubmission(
-                submissionId = submission.id!!,
-                questionId = question.id!!,
-                userId = submission.userId,
-                question = question.question,
-                tag = question.tag.displayName,
-                answer = submission.answer,
-                feedback = submission.feedback,
-                isCorrect = submission.isCorrect,
-                createdAt = submission.createdAt,
-                updatedAt = submission.updatedAt,
-            )
-        }
+                UserProfileResponse.UserProfileSubmission(
+                    submissionId = submission.id!!,
+                    questionId = question.id!!,
+                    userId = submission.userId,
+                    question = question.question,
+                    tag = question.tag.displayName,
+                    answer = submission.answer,
+                    feedback = submission.feedback,
+                    isCorrect = submission.isCorrect,
+                    createdAt = submission.createdAt,
+                    updatedAt = submission.updatedAt,
+                )
+            }
 
         return PageResponse(
             results = results,
