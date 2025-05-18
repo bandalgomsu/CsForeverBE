@@ -6,6 +6,7 @@ import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.common.exception.CommonErrorCode
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.reactor.mono
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatusCode
 import org.springframework.http.MediaType
@@ -21,6 +22,8 @@ class AuthorizationFilter(
     @Value("\${auth.paths}")
     private val authPaths: List<String>
 ) : WebFilter {
+
+    private val logger = LoggerFactory.getLogger(AuthorizationFilter::class.java)
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
         return mono {
@@ -74,6 +77,8 @@ class AuthorizationFilter(
                 exchange.response.headers.add("Access-Control-Allow-Origin", requestOrigin)
                 exchange.response.headers.add("Access-Control-Allow-Credentials", "true")
             }
+
+            logger.error("${errorCode.getCodeValue()} - ${errorCode.getMessageValue()}", exception)
 
             val errorJson =
                 """{ "code": "${errorCode.getCodeValue()}", "message": "${errorCode.getMessageValue()}", "status": ${errorCode.getStatusValue()} }"""

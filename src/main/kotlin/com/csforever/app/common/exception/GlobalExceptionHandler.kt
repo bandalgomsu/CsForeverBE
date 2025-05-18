@@ -15,7 +15,8 @@ class GlobalExceptionHandler {
     fun handleBusinessException(
         exception: BusinessException,
     ): Mono<ResponseEntity<ErrorResponse>> {
-        logger.error(exception.errorCode.getCodeValue(), exception)
+        logger.error("${exception.errorCode.getCodeValue()} - ${exception.errorCode.getMessageValue()}", exception)
+
         val errorCode = exception.errorCode
         val response = ErrorResponse(errorCode)
         return Mono.just(ResponseEntity(response, HttpStatus.valueOf(errorCode.getStatusValue())))
@@ -26,6 +27,7 @@ class GlobalExceptionHandler {
         exception: Exception,
     ): Mono<ResponseEntity<ErrorResponse>> {
         logger.error("Exception", exception)
+
         val errorCode = CommonErrorCode.INTERNAL_SERVER_ERROR
         val response = ErrorResponse(errorCode)
         return Mono.just(ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR))
