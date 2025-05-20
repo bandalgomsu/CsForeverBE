@@ -21,5 +21,10 @@ enum class QuestionTag(val displayName: String) {
     R("R"),
     C_PLUS_PLUS("C++"),
     UNITY("Unity"),
+    KUBERNETES("Kubernetes"),
+    KAFKA("Kafka"),
+    MSA("MSA"),
+    FLUTTER("Flutter"),
+    AI("AI"),
     ;
 }
