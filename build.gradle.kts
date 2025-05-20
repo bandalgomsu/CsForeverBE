@@ -40,6 +40,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("commons-validator:commons-validator:1.7")
 
+    //Json Logging
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
+
+
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("io.asyncer:r2dbc-mysql")
 
