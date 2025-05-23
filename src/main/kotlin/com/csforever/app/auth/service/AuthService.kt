@@ -40,8 +40,11 @@ class AuthService(
         tokenHandler.deleteToken(token)
     }
 
-    suspend fun sendSignUpVerificationEmail(email: String) {
-        emailVerificationHandler.sendSignUpVerificationEmail(email, RandomNumberGenerator.generateRandomNumber(6))
+    suspend fun sendSignUpVerificationEmail(
+        email: String,
+        code: String = RandomNumberGenerator.generateRandomNumber(6)
+    ) {
+        emailVerificationHandler.sendSignUpVerificationEmail(email, code)
     }
 
     suspend fun verifySignUpEmailCode(email: String, code: String): AuthResponse.SignUpVerifyEmailCodeResponse {
