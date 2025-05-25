@@ -1,8 +1,6 @@
 package com.csforever.question.service
 
-import com.csforever.app.common.llm.LLMClient
-import com.csforever.app.question.dto.QuestionCommandResponse
-import com.csforever.app.question.implement.QuestionFinder
+import com.csforever.app.question.implement.QuestionSubmitter
 import com.csforever.app.question.service.QuestionCommandService
 import com.csforever.app.submission.implement.SubmissionInserter
 import com.csforever.question.QuestionTestUtil.Companion.getQuestionSubmitRequest
@@ -16,16 +14,14 @@ import org.junit.jupiter.api.Test
 class QuestionCommandServiceTest {
     private lateinit var questionCommandService: QuestionCommandService
 
-    private val questionFinder: QuestionFinder = mockk(relaxed = true)
-    private var llmClient: LLMClient = mockk(relaxed = true)
+    private val questionSubmitter: QuestionSubmitter = mockk(relaxed = true)
     private var submissionInserter: SubmissionInserter = mockk(relaxed = true)
 
     @BeforeEach
     fun setup() {
         questionCommandService = QuestionCommandService(
-            llmClient,
             submissionInserter,
-            questionFinder
+            questionSubmitter,
         )
     }
 
@@ -35,7 +31,7 @@ class QuestionCommandServiceTest {
 
         val questionCommandResponse = getQuestionSubmitResponse()
 
-        coEvery { llmClient.requestByCommand<QuestionCommandResponse.QuestionSubmitResponse>(any()) } returns questionCommandResponse
+        coEvery { questionSubmitter.submit(request.questionId, request.answer, null) } returns questionCommandResponse
 
         val response = questionCommandService.submitQuestion(
             request = request,
