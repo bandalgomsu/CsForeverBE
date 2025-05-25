@@ -30,6 +30,14 @@ class ReactiveRedisClient(
             .awaitSingle()
     }
 
+    override suspend fun <T> addDataToSet(key: String, data: T): Boolean {
+        redisTemplate.opsForSet()
+            .add(key, objectMapper.writeValueAsString(data))
+            .awaitSingle()
+
+        return true
+    }
+
     override suspend fun <T : Any> getData(key: String, type: KClass<T>): T? = coroutineScope {
         redisTemplate.opsForValue()
             .get(key)
@@ -42,6 +50,24 @@ class ReactiveRedisClient(
     override suspend fun <T : Any> getData(key: String, type: Class<T>): T? = coroutineScope {
         redisTemplate.opsForValue()
             .get(key)
+            .awaitSingleOrNull()
+            ?.let {
+                objectMapper.readValue(it, type)
+            }
+    }
+
+    override suspend fun <T : Any> getRandomDataFromSet(key: String, type: KClass<T>): T? {
+        return redisTemplate.opsForSet()
+            .randomMember(key)
+            .awaitSingleOrNull()
+            ?.let {
+                objectMapper.readValue(it, type.java)
+            }
+    }
+
+    override suspend fun <T : Any> getRandomDataFromSet(key: String, type: Class<T>): T? {
+        return redisTemplate.opsForSet()
+            .randomMember(key)
             .awaitSingleOrNull()
             ?.let {
                 objectMapper.readValue(it, type)

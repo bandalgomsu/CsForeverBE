@@ -59,14 +59,11 @@ class QuestionEntityRepositoryTest(
     }
 
     @Test
-    fun findRandomByTag() = runTest {
-        val entity = questionEntityRepository.findRandomByTag(listOf(tag1, tag2))
+    fun findIdsByTag() = runTest {
+        val ids = questionEntityRepository.findIdsByTag(tag1)
 
-        assert(entity != null)
-        assert(entity?.id == id1 || entity?.id == id2)
-        assert(entity?.question == question)
-        assert(entity?.bestAnswer == bestAnswer)
-        assert(entity?.tag == tag1 || entity?.tag == tag2)
+        assert(ids.size == 1)
+        assert(ids[0] == id1)
     }
 
     @Test

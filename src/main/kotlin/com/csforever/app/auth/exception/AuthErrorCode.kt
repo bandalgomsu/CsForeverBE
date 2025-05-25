@@ -11,6 +11,7 @@ enum class AuthErrorCode(val code: String, val message: String, var status: Int)
     INVALID_VERIFICATION_CODE("A04", "INVALID_VERIFICATION_CODE", HttpStatus.BAD_REQUEST.value()),
     EXPIRED_VERIFICATION_CODE("A05", "EXPIRED_VERIFICATION_CODE", HttpStatus.BAD_REQUEST.value()),
     NOT_EXISTS_VERIFICATION_SESSION("A06", "NOT_EXISTS_VERIFICATION_SESSION", HttpStatus.BAD_REQUEST.value()),
+    NOT_MATCHED_ROLE("A07", "NOT_MATCHED_ROLE", HttpStatus.UNAUTHORIZED.value()),
     ;
 
     override fun getCodeValue(): String {
