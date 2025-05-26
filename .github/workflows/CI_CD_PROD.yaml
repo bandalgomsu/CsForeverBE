@@ -93,6 +93,7 @@ jobs:
           
             echo "[2] prod"
             ssh -o StrictHostKeyChecking=no -i ~/.ssh/${keyname}.key opc@$ip "
+              echo "${{ secrets.ENV }}" > .env
               sudo docker stop ${{ secrets.SERVICE_NAME }}
               sudo docker rm ${{ secrets.SERVICE_NAME }}
               sudo docker rmi $(sudo docker images -q)
