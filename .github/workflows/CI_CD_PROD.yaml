@@ -92,21 +92,13 @@ jobs:
               --offline true
           
             echo "[2] prod"
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/${keyname}.key opc@$ip '
-            sudo echo "${{ secrets.ENV }}" > .env
-            sudo docker stop '"${{ secrets.SERVICE_NAME }}"'
-            sudo docker rm '"${{ secrets.SERVICE_NAME }}"'
-            sudo docker rmi $(sudo docker images -q)
-            sudo docker pull '"${{ secrets.DOCKER_REPO }}"/${{ secrets.SERVICE_NAME }}"'
-            sudo docker run -i -t \
-            --log-driver=fluentd \
-            --log-opt fluentd-address=localhost:24224 \
-            --log-opt tag='"${{ secrets.SERVICE_NAME }}"' \
-            --env-file ./.env \
-            -p 8081:8081 \
-            -d --name '"${{ secrets.SERVICE_NAME }}"' \
-            '"${{ secrets.DOCKER_REPO }}"/${{ secrets.SERVICE_NAME }}:latest"
-          '
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/${keyname}.key opc@$ip "
+              sudo docker stop ${{ secrets.SERVICE_NAME }}
+              sudo docker rm ${{ secrets.SERVICE_NAME }}
+              sudo docker rmi $(sudo docker images -q)
+              sudo docker pull ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}
+              sudo docker run -i -t --log-driver=fluentd --log-opt fluentd-address=localhost:24224 --log-opt tag=${{ secrets.SERVICE_NAME }} --env-file ./.env -p 8081:8081 -d --name ${{ secrets.SERVICE_NAME }} ${{ secrets.DOCKER_REPO }}/${{ secrets.SERVICE_NAME }}:latest
+            "
           
             echo "[3] wait health check (30s)"
             sleep 30
