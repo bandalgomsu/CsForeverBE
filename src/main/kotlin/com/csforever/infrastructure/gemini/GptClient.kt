@@ -13,19 +13,23 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 
 @Component
-class GeminiClient(
-    @Value("\${llm.api.gemini.key}")
+class GptClient(
+    @Value("\${llm.api.gpt.key}")
     private val apiKey: String,
     private val objectMapper: ObjectMapper
 ) : LLMClient {
 
     override suspend fun <T> requestByCommand(command: LLMCommand<T>): T {
         val webClient = WebClient.builder()
-            .baseUrl("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}")
+            .baseUrl("https://api.openai.com/v1/responses")
             .defaultHeader("Content-Type", "application/json")
+            .defaultHeader("Authorization", "Bearer $apiKey")
             .build()
 
-        val request = mapOf("contents" to listOf(mapOf("parts" to listOf(mapOf("text" to command.body)))))
+        val request = mapOf(
+            "model" to "gpt-4.1-mini",
+            "input" to command.body
+        )
 
         val response = webClient
             .post()

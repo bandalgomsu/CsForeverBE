@@ -59,7 +59,11 @@ springdoc:
 
 llm:
   api:
-    key: ${LLM_API_KEY}
+    gemini:
+      key: ${GEMINI_API_KEY}
+    gpt:
+      key: ${GPT_API_KEY}
+
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
