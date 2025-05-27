@@ -12,6 +12,7 @@ class Question(
         return QuestionQueryResponse.QuestionInfo(
             questionId = id!!,
             question = question,
+            bestAnswer = bestAnswer,
         )
     }
 }
