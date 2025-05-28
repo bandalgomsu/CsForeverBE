@@ -56,9 +56,9 @@ class QuestionSubmitter(
         } catch (e: BusinessException) {
             if (e.errorCode == LLMErrorCode.TOO_MANY_REQUEST) {
                 log.warn("[QUESTION_SUBMITTER] GEMINI TOO_MANY_REQUEST")
-                executeTooManyRequestFallback(command)
+                return executeTooManyRequestFallback(command)
             }
-            
+
             throw e
         }
 
