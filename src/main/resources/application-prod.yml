@@ -63,3 +63,6 @@ auth:
   token:
     expiration: ${ACCESS_EXP}
   paths: ${AUTH_PATHS}
+
+scheduler:
+  key: ${SCHEDULER_KEY}

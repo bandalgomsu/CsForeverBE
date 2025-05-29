@@ -36,3 +36,16 @@ CREATE TABLE IF NOT EXISTS submission
     updated_at  timestamp(6),
     primary key (id)
 );
+
+CREATE TABLE IF NOT EXISTS user_ranking
+(
+    id                       bigint      not null AUTO_INCREMENT,
+    user_id                  bigint      not null,
+    ranking                  bigint      not null,
+    type                     varchar(20) not null,
+    correct_submission_count bigint      not null,
+    created_at               timestamp(6),
+    updated_at               timestamp(6),
+    primary key (id),
+    UNIQUE KEY uq_user_type (user_id, type)
+);

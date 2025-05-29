@@ -1,0 +1,17 @@
+package com.csforever.app.ranking.implement
+
+import com.csforever.app.common.exception.BusinessException
+import com.csforever.app.ranking.dao.RankingDao
+import com.csforever.app.ranking.exception.RankingErrorCode
+import com.csforever.app.ranking.model.Ranking
+import org.springframework.stereotype.Component
+
+@Component
+class RankingFinder(
+    private val rankingDao: RankingDao
+) {
+
+    suspend fun findByUserId(userId: Long): Ranking {
+        return rankingDao.findByUserId(userId) ?: throw BusinessException(RankingErrorCode.RANKING_NOT_FOUND)
+    }
+}

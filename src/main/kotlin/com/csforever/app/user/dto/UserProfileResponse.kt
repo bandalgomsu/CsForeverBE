@@ -9,7 +9,8 @@ class UserProfileResponse {
         val nickname: String,
         val career: Int,
         val position: String,
-        val correctSubmissionCount: Long
+        val correctSubmissionCount: Long,
+        val ranking: Long?
     )
 
     data class UserProfileSubmission(

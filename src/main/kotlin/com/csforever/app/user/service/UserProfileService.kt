@@ -4,6 +4,8 @@ import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.common.pagination.PageResponse
 import com.csforever.app.question.exception.QuestionErrorCode
 import com.csforever.app.question.implement.QuestionFinder
+import com.csforever.app.ranking.exception.RankingErrorCode
+import com.csforever.app.ranking.implement.RankingFinder
 import com.csforever.app.submission.implement.SubmissionCounter
 import com.csforever.app.submission.implement.SubmissionFinder
 import com.csforever.app.user.dto.UserProfileResponse
@@ -14,11 +16,21 @@ import org.springframework.stereotype.Service
 class UserProfileService(
     private val submissionCounter: SubmissionCounter,
     private val submissionFinder: SubmissionFinder,
-    private val questionFinder: QuestionFinder
+    private val questionFinder: QuestionFinder,
+    private val rankingFinder: RankingFinder,
 ) {
 
     suspend fun getUserProfile(user: User): UserProfileResponse.UserProfile {
         val correctSubmissionCount = submissionCounter.countByUserIdAndIsCorrect(user.id!!, true)
+
+        val ranking = try {
+            rankingFinder.findByUserId(user.id).ranking
+        } catch (e: BusinessException) {
+            when (e.errorCode) {
+                RankingErrorCode.RANKING_NOT_FOUND -> null
+                else -> throw e
+            }
+        }
 
         return UserProfileResponse.UserProfile(
             id = user.id,
@@ -26,7 +38,8 @@ class UserProfileService(
             nickname = user.nickname,
             career = user.career,
             position = user.position.krName,
-            correctSubmissionCount = correctSubmissionCount
+            correctSubmissionCount = correctSubmissionCount,
+            ranking = ranking
         )
     }
 
