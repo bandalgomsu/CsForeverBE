@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ranking-scheduler
+  cancel-in-progress: false
+
 permissions: write-all
 
 jobs:

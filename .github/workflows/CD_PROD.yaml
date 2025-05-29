@@ -3,6 +3,10 @@ name: CD_PROD_ROLLING
 on:
   workflow_dispatch:
 
+concurrency:
+  group: ranking-scheduler
+  cancel-in-progress: false
+
 permissions: write-all
 
 jobs:

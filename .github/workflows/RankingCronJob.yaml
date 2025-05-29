@@ -5,6 +5,10 @@ on:
     - cron: '0 * * * *'  # 매 시간마다 (UTC)
   workflow_dispatch:
 
+concurrency:
+  group: ranking-scheduler
+  cancel-in-progress: false
+
 jobs:
   ranking_crong_jon:
     runs-on: ubuntu-latest
@@ -17,7 +21,7 @@ jobs:
           echo "${{ secrets.SSH_KEY_WAS2 }}" > ~/.ssh/SSH_KEY_WAS2.key
           echo "${{ secrets.SSH_KEY_WAS3 }}" > ~/.ssh/SSH_KEY_WAS3.key
           chmod 600 ~/.ssh/*.key
-          
+
       - name: Prod
         env:
           SERVER_CONFIG: ${{ secrets.SERVER_CONFIG }}
