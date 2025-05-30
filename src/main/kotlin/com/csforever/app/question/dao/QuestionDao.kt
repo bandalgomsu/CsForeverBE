@@ -9,4 +9,5 @@ interface QuestionDao {
 
     suspend fun findAll(): List<Question>
     suspend fun findAllByIdIn(questionIds: List<Long>): List<Question>
+    suspend fun findAllByTagAndIdIn(tag: QuestionTag, questionIds: List<Long>): List<Question>
 }

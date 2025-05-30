@@ -21,6 +21,10 @@ class QuestionFinder(
         return questionDao.findById(questionId) ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
     }
 
+    suspend fun findIdsByTag(tag: QuestionTag): List<Long> {
+        return questionDao.findIdsByTag(tag)
+    }
+
     suspend fun findRandomByTags(tags: List<QuestionTag>): Question {
         val randomTag = tags.random()
 
@@ -48,5 +52,12 @@ class QuestionFinder(
 
     suspend fun findAllByIdIn(questionIds: List<Long>): List<Question> {
         return questionDao.findAllByIdIn(questionIds)
+    }
+
+    suspend fun findAllByTagAndIdIn(
+        tag: QuestionTag,
+        questionIds: List<Long>
+    ): List<Question> {
+        return questionDao.findAllByTagAndIdIn(tag, questionIds)
     }
 }

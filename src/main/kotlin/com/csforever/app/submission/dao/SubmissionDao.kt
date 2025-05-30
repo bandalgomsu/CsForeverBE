@@ -18,4 +18,11 @@ interface SubmissionDao {
         page: Int = 1
     ): PageResponse<Submission>
 
+    suspend fun findPageByUserIdAndIsCorrectAndQuestionIds(
+        userId: Long,
+        isCorrect: Boolean = true,
+        questionIds: List<Long>,
+        size: Int = 5,
+        page: Int = 1
+    ): PageResponse<Submission>
 }

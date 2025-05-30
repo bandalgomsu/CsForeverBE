@@ -27,4 +27,5 @@ interface QuestionCoroutineRepository : CoroutineCrudRepository<QuestionEntity, 
     suspend fun findIdsByTag(tag: QuestionTag): Flow<Long>
 
     suspend fun findAllByIdIn(questionIds: List<Long>): Flow<QuestionEntity>
+    suspend fun findAllByTagAndIdIn(tag: QuestionTag, questionIds: List<Long>): Flow<QuestionEntity>
 }

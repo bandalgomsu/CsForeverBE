@@ -4,6 +4,7 @@ import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.common.pagination.PageResponse
 import com.csforever.app.question.exception.QuestionErrorCode
 import com.csforever.app.question.implement.QuestionFinder
+import com.csforever.app.question.model.QuestionTag
 import com.csforever.app.ranking.exception.RankingErrorCode
 import com.csforever.app.ranking.implement.RankingFinder
 import com.csforever.app.submission.implement.SubmissionCounter
@@ -47,7 +48,7 @@ class UserProfileService(
         user: User,
         isCorrect: Boolean = true,
         size: Int = 5,
-        page: Int = 1
+        page: Int = 1,
     ): PageResponse<UserProfileResponse.UserProfileSubmission> {
         val submissionPage = submissionFinder.findPageByUserIdAndIsCorrect(
             userId = user.id!!,
@@ -66,6 +67,61 @@ class UserProfileService(
             .map { submission ->
                 val question = questionMap[submission.questionId] ?: throw BusinessException(
                     "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIds} , user_id : ${user.id} ",
+                    QuestionErrorCode.QUESTION_NOT_FOUND
+                )
+
+                UserProfileResponse.UserProfileSubmission(
+                    submissionId = submission.id!!,
+                    questionId = question.id!!,
+                    userId = submission.userId,
+                    question = question.question,
+                    tag = question.tag.displayName,
+                    answer = submission.answer,
+                    feedback = submission.feedback,
+                    isCorrect = submission.isCorrect,
+                    createdAt = submission.createdAt,
+                    updatedAt = submission.updatedAt,
+                )
+            }
+
+        return PageResponse(
+            results = results,
+            totalPages = submissionPage.totalPages,
+            totalElements = submissionPage.totalElements,
+            currentPage = submissionPage.currentPage,
+            pageSize = submissionPage.pageSize,
+        )
+    }
+
+    suspend fun findUserProfileSubmissionPageByTag(
+        user: User,
+        isCorrect: Boolean = true,
+        size: Int = 5,
+        page: Int = 1,
+        tag: QuestionTag
+    ): PageResponse<UserProfileResponse.UserProfileSubmission> {
+        val questionIds = questionFinder.findIdsByTag(
+            tag = tag
+        )
+
+        val submissionPage = submissionFinder.findPageByUserIdAndIsCorrectAndQuestionIds(
+            userId = user.id!!,
+            isCorrect = isCorrect,
+            questionIds = questionIds,
+            size = size,
+            page = page
+        )
+
+        val questionIdsInSubmission = submissionPage.results.map { it.questionId }
+        val questions = questionFinder.findAllByIdIn(questionIdsInSubmission)
+
+        val questionMap = questions.associateBy { it.id }
+
+        val results = submissionPage.results
+            .filter { it.questionId in questionMap.keys }
+            .map { submission ->
+                val question = questionMap[submission.questionId] ?: throw BusinessException(
+                    "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIdsInSubmission} , user_id : ${user.id} ",
                     QuestionErrorCode.QUESTION_NOT_FOUND
                 )
 

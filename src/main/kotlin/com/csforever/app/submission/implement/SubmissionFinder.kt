@@ -23,4 +23,20 @@ class SubmissionFinder(
             page = page
         )
     }
+
+    suspend fun findPageByUserIdAndIsCorrectAndQuestionIds(
+        userId: Long,
+        isCorrect: Boolean = true,
+        questionIds: List<Long>,
+        size: Int = 5,
+        page: Int = 1
+    ): PageResponse<Submission> {
+        return submissionDao.findPageByUserIdAndIsCorrectAndQuestionIds(
+            userId = userId,
+            isCorrect = isCorrect,
+            questionIds = questionIds,
+            size = size,
+            page = page
+        )
+    }
 }

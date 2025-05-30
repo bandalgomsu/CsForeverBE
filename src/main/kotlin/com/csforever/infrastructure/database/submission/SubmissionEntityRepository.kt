@@ -71,7 +71,47 @@ class SubmissionEntityRepository(
             currentPage = page,
             pageSize = size,
         )
+    }
 
+    override suspend fun findPageByUserIdAndIsCorrectAndQuestionIds(
+        userId: Long,
+        isCorrect: Boolean,
+        questionIds: List<Long>,
+        size: Int,
+        page: Int
+    ): PageResponse<Submission> = coroutineScope {
+        val safePage = maxOf(page, 1)
+        val offset = (safePage - 1) * size
 
+        val submissionsDeferred = async {
+            submissionCoroutineRepository.findPageByUserIdAndIsCorrectAndQuestionIds(
+                userId = userId,
+                isCorrect = isCorrect,
+                questionIds = questionIds,
+                size = size,
+                offset = offset
+            )
+        }
+
+        val countDeferred = async {
+            submissionCoroutineRepository.countAllByUserIdAndIsCorrectAndQuestionIdIn(
+                userId = userId,
+                isCorrect = isCorrect,
+                questionIds = questionIds
+            )
+        }
+
+        val submissionPage = submissionsDeferred.await()
+        val totalElements = countDeferred.await()
+
+        val totalPages = (totalElements + size - 1) / size
+
+        return@coroutineScope PageResponse(
+            results = submissionPage.map { it.toModel() },
+            totalPages = totalPages,
+            totalElements = totalElements,
+            currentPage = page,
+            pageSize = size,
+        )
     }
 }

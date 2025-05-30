@@ -30,5 +30,11 @@ class QuestionEntityRepository(
             .toList()
             .map { it.toModel() }
     }
+
+    override suspend fun findAllByTagAndIdIn(tag: QuestionTag, questionIds: List<Long>): List<Question> {
+        return questionCoroutineRepository.findAllByTagAndIdIn(tag, questionIds)
+            .toList()
+            .map { it.toModel() }
+    }
 }
 
