@@ -33,7 +33,8 @@ class QuestionQueryControllerTest {
 
         val expectedResponse = QuestionQueryResponse.QuestionInfo(
             questionId = 1,
-            question = "test_question"
+            question = "test_question",
+            bestAnswer = "test_answer",
         )
 
         coEvery { tokenHandler.extractToken(any()) } returns UserAuthorizationContext()

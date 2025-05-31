@@ -48,11 +48,12 @@ class UserProfileControllerTest {
             nickname = mockUser.nickname,
             position = "백엔드",
             career = mockUser.career,
-            correctSubmissionCount = 5
+            correctSubmissionCount = 5,
+            ranking = 1
         )
 
         coEvery { tokenHandler.extractToken(any()) } returns UserAuthorizationContext(mockUser)
-        coEvery { userProfileService.getUserProfile(mockUser) } returns response
+        coEvery { userProfileService.getUserProfile(mockUser.id!!) } returns response
 
         webTestClient.get()
             .uri("/api/v1/user/profile")

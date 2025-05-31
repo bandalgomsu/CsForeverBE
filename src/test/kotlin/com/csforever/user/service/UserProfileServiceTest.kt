@@ -4,6 +4,7 @@ import com.csforever.app.common.pagination.PageResponse
 import com.csforever.app.question.implement.QuestionFinder
 import com.csforever.app.question.model.Question
 import com.csforever.app.question.model.QuestionTag
+import com.csforever.app.ranking.implement.RankingFinder
 import com.csforever.app.submission.implement.SubmissionCounter
 import com.csforever.app.submission.implement.SubmissionFinder
 import com.csforever.app.submission.model.Submission
@@ -25,6 +26,7 @@ class UserProfileServiceTest {
     private lateinit var submissionFinder: SubmissionFinder
     private lateinit var questionFinder: QuestionFinder
     private lateinit var userProfileService: UserProfileService
+    private lateinit var rankingFinder: RankingFinder
 
     private val mockUser = User(
         id = 1L,
@@ -41,11 +43,13 @@ class UserProfileServiceTest {
         submissionCounter = mock(SubmissionCounter::class.java)
         submissionFinder = mock(SubmissionFinder::class.java)
         questionFinder = mock(QuestionFinder::class.java)
+        rankingFinder = mock(RankingFinder::class.java)
 
         userProfileService = UserProfileService(
             submissionCounter,
             submissionFinder,
-            questionFinder
+            questionFinder,
+            rankingFinder
         )
     }
 
@@ -99,6 +103,63 @@ class UserProfileServiceTest {
 
         val result = userProfileService.findUserProfileSubmissionPage(
             user = mockUser,
+            isCorrect = true,
+            size = 5,
+            page = 1
+        )
+
+        assertEquals(1, result.totalElements)
+        val item = result.results.first()
+        assertEquals(100L, item.submissionId)
+        assertEquals("What is 6 x 7?", item.question)
+        assertEquals(QuestionTag.JAVA.displayName, item.tag)
+        assertEquals("42", item.answer)
+        assertEquals("Correct!", item.feedback)
+    }
+
+    @Test
+    fun findUserProfileSubmissionPageByTag() = runBlocking {
+        val now = LocalDateTime.now()
+
+        val submissions = listOf(
+            Submission(
+                id = 100L,
+                userId = 1L,
+                questionId = 10L,
+                answer = "42",
+                isCorrect = true,
+                feedback = "Correct!",
+                createdAt = now,
+                updatedAt = now
+            )
+        )
+
+        val submissionPage = PageResponse(
+            results = submissions,
+            totalPages = 1,
+            totalElements = 1,
+            currentPage = 1,
+            pageSize = 5
+        )
+
+        val questionIds = listOf(10L)
+
+        val question = Question(
+            id = 10L,
+            question = "What is 6 x 7?",
+            tag = QuestionTag.JAVA,
+            bestAnswer = "test_best_answer",
+        )
+
+        `when`(questionFinder.findIdsByTag(QuestionTag.JAVA)).thenReturn(questionIds)
+        `when`(submissionFinder.findPageByUserIdAndIsCorrectAndQuestionIds(1L, true, questionIds, 5, 1)).thenReturn(
+            submissionPage
+        )
+        `when`(questionFinder.findAllByIdIn(listOf(10L))).thenReturn(listOf(question))
+
+        val result = userProfileService.findUserProfileSubmissionPageByTag(
+            user = mockUser,
+            tag = QuestionTag.JAVA,
             isCorrect = true,
             size = 5,
             page = 1

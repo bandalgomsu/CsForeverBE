@@ -20,11 +20,13 @@ import kotlin.test.assertEquals
 
 class QuestionSubmitterTest {
     private var redisClient: RedisClient = mockk(relaxed = true)
-    private var llmClient: LLMClient = mockk(relaxed = true)
+    private var geminiClient: LLMClient = mockk(relaxed = true)
+    private var gptClient: LLMClient = mockk(relaxed = true)
     private var questionDao: QuestionDao = mockk(relaxed = true)
 
     private var questionSubmitter = QuestionSubmitter(
-        llmClient = llmClient,
+        geminiClient = geminiClient,
+        gptClient = gptClient,
         redisClient = redisClient,
         questionDao = questionDao
     )
@@ -59,7 +61,7 @@ class QuestionSubmitterTest {
         } returns question
 
         coEvery {
-            llmClient.requestByCommand(any(LLMQuestionSubmitCommand::class))
+            geminiClient.requestByCommand(any(LLMQuestionSubmitCommand::class))
         } returns submitResponse
 
         val response = questionSubmitter.submit(questionId, answer, user)
