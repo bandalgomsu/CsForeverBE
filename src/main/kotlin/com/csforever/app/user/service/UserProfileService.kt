@@ -9,7 +9,9 @@ import com.csforever.app.ranking.exception.RankingErrorCode
 import com.csforever.app.ranking.implement.RankingFinder
 import com.csforever.app.submission.implement.SubmissionCounter
 import com.csforever.app.submission.implement.SubmissionFinder
+import com.csforever.app.submission.model.Submission
 import com.csforever.app.user.dto.UserProfileResponse
+import com.csforever.app.user.implement.UserFinder
 import com.csforever.app.user.model.User
 import org.springframework.stereotype.Service
 
@@ -19,13 +21,15 @@ class UserProfileService(
     private val submissionFinder: SubmissionFinder,
     private val questionFinder: QuestionFinder,
     private val rankingFinder: RankingFinder,
+    private val userFinder: UserFinder
 ) {
 
-    suspend fun getUserProfile(user: User): UserProfileResponse.UserProfile {
-        val correctSubmissionCount = submissionCounter.countByUserIdAndIsCorrect(user.id!!, true)
+    suspend fun getUserProfile(userId: Long): UserProfileResponse.UserProfile {
+        val correctSubmissionCount = submissionCounter.countByUserIdAndIsCorrect(userId, true)
+        val user = userFinder.findById(userId)
 
         val ranking = try {
-            rankingFinder.findByUserId(user.id).ranking
+            rankingFinder.findByUserId(userId).ranking
         } catch (e: BusinessException) {
             when (e.errorCode) {
                 RankingErrorCode.RANKING_NOT_FOUND -> null
@@ -34,7 +38,7 @@ class UserProfileService(
         }
 
         return UserProfileResponse.UserProfile(
-            id = user.id,
+            id = user.id!!,
             email = user.email,
             nickname = user.nickname,
             career = user.career,
@@ -57,32 +61,7 @@ class UserProfileService(
             page = page
         )
 
-        val questionIds = submissionPage.results.map { it.questionId }
-        val questions = questionFinder.findAllByIdIn(questionIds)
-
-        val questionMap = questions.associateBy { it.id }
-
-        val results = submissionPage.results
-            .filter { it.questionId in questionMap.keys }
-            .map { submission ->
-                val question = questionMap[submission.questionId] ?: throw BusinessException(
-                    "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIds} , user_id : ${user.id} ",
-                    QuestionErrorCode.QUESTION_NOT_FOUND
-                )
-
-                UserProfileResponse.UserProfileSubmission(
-                    submissionId = submission.id!!,
-                    questionId = question.id!!,
-                    userId = submission.userId,
-                    question = question.question,
-                    tag = question.tag.displayName,
-                    answer = submission.answer,
-                    feedback = submission.feedback,
-                    isCorrect = submission.isCorrect,
-                    createdAt = submission.createdAt,
-                    updatedAt = submission.updatedAt,
-                )
-            }
+        val results = createUserProfileSubmissions(submissionPage, user.id)
 
         return PageResponse(
             results = results,
@@ -112,16 +91,31 @@ class UserProfileService(
             page = page
         )
 
+        val results = createUserProfileSubmissions(submissionPage, user.id)
+
+        return PageResponse(
+            results = results,
+            totalPages = submissionPage.totalPages,
+            totalElements = submissionPage.totalElements,
+            currentPage = submissionPage.currentPage,
+            pageSize = submissionPage.pageSize,
+        )
+    }
+
+    private suspend fun createUserProfileSubmissions(
+        submissionPage: PageResponse<Submission>,
+        userId: Long
+    ): List<UserProfileResponse.UserProfileSubmission> {
         val questionIdsInSubmission = submissionPage.results.map { it.questionId }
         val questions = questionFinder.findAllByIdIn(questionIdsInSubmission)
 
         val questionMap = questions.associateBy { it.id }
 
-        val results = submissionPage.results
+        return submissionPage.results
             .filter { it.questionId in questionMap.keys }
             .map { submission ->
                 val question = questionMap[submission.questionId] ?: throw BusinessException(
-                    "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIdsInSubmission} , user_id : ${user.id} ",
+                    "Question Not Found question_id : ${submission.questionId} , question_ids : ${questionIdsInSubmission} , user_id : ${userId} ",
                     QuestionErrorCode.QUESTION_NOT_FOUND
                 )
 
@@ -138,13 +132,5 @@ class UserProfileService(
                     updatedAt = submission.updatedAt,
                 )
             }
-
-        return PageResponse(
-            results = results,
-            totalPages = submissionPage.totalPages,
-            totalElements = submissionPage.totalElements,
-            currentPage = submissionPage.currentPage,
-            pageSize = submissionPage.pageSize,
-        )
     }
 }

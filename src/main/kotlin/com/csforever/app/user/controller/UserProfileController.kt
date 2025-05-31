@@ -17,7 +17,7 @@ class UserProfileController(
 
     @GetMapping
     suspend fun getUserProfile(@AuthorizationContext authorizationContext: UserAuthorizationContext): ResponseEntity<UserProfileResponse.UserProfile> {
-        val response = userProfileService.getUserProfile(authorizationContext.user!!)
+        val response = userProfileService.getUserProfile(authorizationContext.user!!.id!!)
 
         return ResponseEntity.ok(response)
     }

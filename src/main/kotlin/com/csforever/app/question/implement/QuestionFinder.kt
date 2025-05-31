@@ -33,21 +33,6 @@ class QuestionFinder(
             ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
 
         return questionDao.findById(randomId) ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
-
-
-//        return redisClient.getRandomDataFromSet(
-//            RedisKey.QUESTION_TAG_SET.createKey(randomTag.name),
-//            Question::class.java
-//        ) ?: coroutineScope {
-//            log.warn("[QuestionFinder] findRandomByTags() Cache Miss for tag: ${randomTag.name}")
-//
-//            val questionIds = questionDao.findIdsByTag(randomTag)
-//            val randomId = questionIds.randomOrNull()
-//                ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
-//
-//            return@coroutineScope questionDao.findById(randomId)
-//                ?: throw BusinessException(QuestionErrorCode.QUESTION_NOT_FOUND)
-//        }
     }
 
     suspend fun findAllByIdIn(questionIds: List<Long>): List<Question> {
