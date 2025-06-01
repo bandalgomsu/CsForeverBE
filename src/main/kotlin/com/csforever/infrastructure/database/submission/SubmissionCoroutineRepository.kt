@@ -17,6 +17,10 @@ interface SubmissionCoroutineRepository : CoroutineCrudRepository<SubmissionEnti
         isCorrect: Boolean
     ): Long
 
+    suspend fun countAllByUserId(
+        userId: Long
+    ): Long
+
     @Query(
         """
         SELECT * FROM submission

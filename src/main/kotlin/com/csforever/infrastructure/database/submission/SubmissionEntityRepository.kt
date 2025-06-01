@@ -33,6 +33,10 @@ class SubmissionEntityRepository(
         )
     }
 
+    override suspend fun countAllByUserId(userId: Long): Long {
+        return submissionCoroutineRepository.countAllByUserId(userId)
+    }
+
     @Transactional(readOnly = true)
     override suspend fun findPageByUserIdAndIsCorrect(
         userId: Long,

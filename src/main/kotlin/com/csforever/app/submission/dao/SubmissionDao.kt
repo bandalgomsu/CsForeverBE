@@ -11,6 +11,8 @@ interface SubmissionDao {
         isCorrect: Boolean
     ): Long
 
+    suspend fun countAllByUserId(userId: Long): Long
+
     suspend fun findPageByUserIdAndIsCorrect(
         userId: Long,
         isCorrect: Boolean = true,

@@ -15,4 +15,8 @@ class SubmissionCounter(
         )
     }
 
+    suspend fun countAllByUserId(userId: Long): Long {
+        return submissionDao.countAllByUserId(userId)
+    }
+
 }

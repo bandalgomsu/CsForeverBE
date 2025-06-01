@@ -26,6 +26,7 @@ class UserProfileService(
 
     suspend fun getUserProfile(userId: Long): UserProfileResponse.UserProfile {
         val correctSubmissionCount = submissionCounter.countByUserIdAndIsCorrect(userId, true)
+        var submissionCount = submissionCounter.countAllByUserId(userId)
         val user = userFinder.findById(userId)
 
         val ranking = try {
@@ -37,13 +38,10 @@ class UserProfileService(
             }
         }
 
-        return UserProfileResponse.UserProfile(
-            id = user.id!!,
-            email = user.email,
-            nickname = user.nickname,
-            career = user.career,
-            position = user.position.krName,
+        return UserProfileResponse.UserProfile.create(
+            user = user,
             correctSubmissionCount = correctSubmissionCount,
+            submissionCount = submissionCount,
             ranking = ranking
         )
     }
@@ -119,17 +117,9 @@ class UserProfileService(
                     QuestionErrorCode.QUESTION_NOT_FOUND
                 )
 
-                UserProfileResponse.UserProfileSubmission(
-                    submissionId = submission.id!!,
-                    questionId = question.id!!,
-                    userId = submission.userId,
-                    question = question.question,
-                    tag = question.tag.displayName,
-                    answer = submission.answer,
-                    feedback = submission.feedback,
-                    isCorrect = submission.isCorrect,
-                    createdAt = submission.createdAt,
-                    updatedAt = submission.updatedAt,
+                UserProfileResponse.UserProfileSubmission.create(
+                    submission = submission,
+                    question = question
                 )
             }
     }
