@@ -26,7 +26,7 @@ class UserProfileService(
 
     suspend fun getUserProfile(userId: Long): UserProfileResponse.UserProfile {
         val correctSubmissionCount = submissionCounter.countByUserIdAndIsCorrect(userId, true)
-        var submissionCount = submissionCounter.countAllByUserId(userId)
+        val submissionCount = submissionCounter.countAllByUserId(userId)
         val user = userFinder.findById(userId)
 
         val ranking = try {
