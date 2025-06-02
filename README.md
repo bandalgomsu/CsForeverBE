@@ -22,6 +22,7 @@
 
 - Kotlin , Spring WebFlux , Coroutine , R2DBC
 - MySql , Redis
-- Gemini API
+- Gemini API , OpenAI API
 - Oracle Cloud Infrastructure
+- TypeScript, React, React Native
 
