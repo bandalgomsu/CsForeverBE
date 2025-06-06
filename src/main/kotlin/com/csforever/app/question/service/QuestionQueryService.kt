@@ -4,6 +4,7 @@ import com.csforever.app.common.scope.CustomScope
 import com.csforever.app.question.dto.QuestionQueryResponse
 import com.csforever.app.question.implement.QuestionFinder
 import com.csforever.app.question.model.QuestionTag
+import com.csforever.app.submission.implement.SubmissionExistChecker
 import com.csforever.app.submission.implement.SubmissionInserter
 import com.csforever.app.user.model.User
 import kotlinx.coroutines.launch
@@ -13,12 +14,18 @@ import org.springframework.stereotype.Service
 class QuestionQueryService(
     private val questionFinder: QuestionFinder,
     private val submissionInserter: SubmissionInserter,
+    private val submissionExistChecker: SubmissionExistChecker
 ) {
 
-    suspend fun findRandomByTags(tags: List<QuestionTag>): QuestionQueryResponse.QuestionInfo {
+    suspend fun findRandomByTags(tags: List<QuestionTag>, userId: Long): QuestionQueryResponse.QuestionInfo {
         val question = questionFinder.findRandomByTags(tags)
+        val isSolution = submissionExistChecker.existByUserIdAndQuestionId(
+            userId = userId,
+            questionId = question.id!!,
+            isCorrect = true
+        )
 
-        return question.toInfo()
+        return question.toInfo(isSolution)
     }
 
     suspend fun findBestAnswerById(questionId: Long, user: User?): QuestionQueryResponse.QuestionInfo {

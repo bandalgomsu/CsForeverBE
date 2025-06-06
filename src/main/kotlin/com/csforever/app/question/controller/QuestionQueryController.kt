@@ -15,8 +15,11 @@ class QuestionQueryController(
 ) {
 
     @GetMapping
-    suspend fun findRandomByTags(@RequestParam tags: List<QuestionTag>): ResponseEntity<QuestionQueryResponse.QuestionInfo> {
-        val response = questionQueryService.findRandomByTags(tags)
+    suspend fun findRandomByTags(
+        @RequestParam tags: List<QuestionTag>,
+        @AuthorizationContext authorizationContext: UserAuthorizationContext
+    ): ResponseEntity<QuestionQueryResponse.QuestionInfo> {
+        val response = questionQueryService.findRandomByTags(tags, authorizationContext.user!!.id!!)
 
         return ResponseEntity.ok(response)
     }

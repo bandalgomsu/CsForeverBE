@@ -5,5 +5,6 @@ class QuestionQueryResponse {
         val questionId: Long,
         val question: String,
         val bestAnswer: String,
+        val isSolution: Boolean = false
     )
 }

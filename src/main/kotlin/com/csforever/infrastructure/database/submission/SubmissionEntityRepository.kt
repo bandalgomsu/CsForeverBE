@@ -37,6 +37,18 @@ class SubmissionEntityRepository(
         return submissionCoroutineRepository.countAllByUserId(userId)
     }
 
+    override suspend fun existsByUserIdAndQuestionIdAndIsCorrect(
+        userId: Long,
+        questionId: Long,
+        isCorrect: Boolean
+    ): Boolean {
+        return submissionCoroutineRepository.existsByUserIdAndQuestionIdAndIsCorrect(
+            userId = userId,
+            questionId = questionId,
+            isCorrect = isCorrect
+        )
+    }
+
     @Transactional(readOnly = true)
     override suspend fun findPageByUserIdAndIsCorrect(
         userId: Long,

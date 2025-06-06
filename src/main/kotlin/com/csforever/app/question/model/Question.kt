@@ -15,4 +15,13 @@ class Question(
             bestAnswer = bestAnswer,
         )
     }
+
+    fun toInfo(isSolution: Boolean): QuestionQueryResponse.QuestionInfo {
+        return QuestionQueryResponse.QuestionInfo(
+            questionId = id!!,
+            question = question,
+            bestAnswer = bestAnswer,
+            isSolution = isSolution
+        )
+    }
 }

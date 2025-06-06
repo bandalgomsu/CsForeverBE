@@ -21,6 +21,12 @@ interface SubmissionCoroutineRepository : CoroutineCrudRepository<SubmissionEnti
         userId: Long
     ): Long
 
+    suspend fun existsByUserIdAndQuestionIdAndIsCorrect(
+        userId: Long,
+        questionId: Long,
+        isCorrect: Boolean
+    ): Boolean
+
     @Query(
         """
         SELECT * FROM submission
