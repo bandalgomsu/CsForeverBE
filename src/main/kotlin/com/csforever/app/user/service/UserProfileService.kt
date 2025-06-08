@@ -10,8 +10,10 @@ import com.csforever.app.ranking.implement.RankingFinder
 import com.csforever.app.submission.implement.SubmissionCounter
 import com.csforever.app.submission.implement.SubmissionFinder
 import com.csforever.app.submission.model.Submission
+import com.csforever.app.user.dto.UserProfileRequest
 import com.csforever.app.user.dto.UserProfileResponse
 import com.csforever.app.user.implement.UserFinder
+import com.csforever.app.user.implement.UserUpdater
 import com.csforever.app.user.model.User
 import org.springframework.stereotype.Service
 
@@ -21,7 +23,8 @@ class UserProfileService(
     private val submissionFinder: SubmissionFinder,
     private val questionFinder: QuestionFinder,
     private val rankingFinder: RankingFinder,
-    private val userFinder: UserFinder
+    private val userFinder: UserFinder,
+    private val userUpdater: UserUpdater
 ) {
 
     suspend fun getUserProfile(userId: Long): UserProfileResponse.UserProfile {
@@ -43,6 +46,18 @@ class UserProfileService(
             correctSubmissionCount = correctSubmissionCount,
             submissionCount = submissionCount,
             ranking = ranking
+        )
+    }
+
+    suspend fun updateUserProfile(
+        userId: Long,
+        request: UserProfileRequest.UserProfileUpdateRequest
+    ) {
+        userUpdater.updateUserProfile(
+            userId = userId,
+            nickname = request.nickname,
+            career = request.career,
+            position = request.position
         )
     }
 

@@ -4,6 +4,7 @@ import com.csforever.app.auth.annotation.AuthorizationContext
 import com.csforever.app.auth.model.UserAuthorizationContext
 import com.csforever.app.common.pagination.PageResponse
 import com.csforever.app.question.model.QuestionTag
+import com.csforever.app.user.dto.UserProfileRequest
 import com.csforever.app.user.dto.UserProfileResponse
 import com.csforever.app.user.service.UserProfileService
 import org.springframework.http.ResponseEntity
@@ -20,6 +21,18 @@ class UserProfileController(
         val response = userProfileService.getUserProfile(authorizationContext.user!!.id!!)
 
         return ResponseEntity.ok(response)
+    }
+
+    @PutMapping
+    suspend fun updateUserProfile(
+        @AuthorizationContext authorizationContext: UserAuthorizationContext,
+        @RequestBody request: UserProfileRequest.UserProfileUpdateRequest
+    ): ResponseEntity<Unit> {
+        request.validate()
+
+        userProfileService.updateUserProfile(authorizationContext.user!!.id!!, request)
+
+        return ResponseEntity.ok().build()
     }
 
     @GetMapping("/submissions")

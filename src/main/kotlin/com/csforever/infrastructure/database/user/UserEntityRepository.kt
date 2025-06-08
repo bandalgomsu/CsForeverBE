@@ -1,6 +1,7 @@
 package com.csforever.infrastructure.database.user
 
 import com.csforever.app.user.dao.UserDao
+import com.csforever.app.user.model.Position
 import com.csforever.app.user.model.User
 import org.springframework.stereotype.Repository
 
@@ -32,5 +33,14 @@ class UserEntityRepository(
                 position = user.position,
             )
         ).toModel()
+    }
+
+    override suspend fun update(userId: Long, nickname: String, career: Int, position: Position) {
+        userCoroutineRepository.update(
+            userId = userId,
+            nickname = nickname,
+            career = career,
+            position = position
+        )
     }
 }
