@@ -64,7 +64,7 @@ class EmailVerificationHandler(
 
         CoroutineScope(Dispatchers.IO).async {
             redisClient.deleteData(EmailVerificationPrefix.SIGN_UP.createKey(email))
-            redisClient.setData(EmailVerificationPrefix.SIGN_UP_VERIFIED.createKey(email), email)
+            redisClient.setData(EmailVerificationPrefix.SIGN_UP_VERIFIED.createKey(email), email, 1200)
         }.await()
 
         return AuthResponse.SignUpVerifyEmailCodeResponse(
