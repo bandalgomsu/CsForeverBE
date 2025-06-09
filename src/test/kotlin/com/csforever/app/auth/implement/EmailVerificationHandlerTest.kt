@@ -48,7 +48,13 @@ class EmailVerificationHandlerTest {
 
         val response = emailVerificationHandler.verifySignUpEmailCode(email, code)
 
-        coVerify(exactly = 1) { redisClient.setData(EmailVerificationPrefix.SIGN_UP_VERIFIED.createKey(email), email) }
+        coVerify(exactly = 1) {
+            redisClient.setData(
+                EmailVerificationPrefix.SIGN_UP_VERIFIED.createKey(email),
+                email,
+                1200
+            )
+        }
         coVerify(exactly = 1) { redisClient.deleteData(EmailVerificationPrefix.SIGN_UP.createKey(email)) }
 
         assertEquals(email, response.email)
