@@ -49,3 +49,14 @@ CREATE TABLE IF NOT EXISTS user_ranking
     primary key (id),
     UNIQUE KEY uq_user_type (user_id, type)
 );
+
+CREATE TABLE IF NOT EXISTS term
+(
+    id         bigint       not null AUTO_INCREMENT,
+    term       varchar(30)  not null,
+    definition varchar(300) not null,
+    created_at timestamp(6),
+    updated_at timestamp(6),
+    primary key (id),
+    UNIQUE KEY uq_term (term)
+);

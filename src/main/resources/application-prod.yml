@@ -62,7 +62,7 @@ cors:
 auth:
   token:
     expiration: ${ACCESS_EXP}
-  paths: ${AUTH_PATHS}
+  paths: /api/v1/user/profile,/api/v1/auth/logout,/api/v1/admin,/api/v1/questions,/api/v1/terms,/api/v1/terms
 
 scheduler:
   key: ${SCHEDULER_KEY}
