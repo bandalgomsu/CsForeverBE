@@ -1,0 +1,53 @@
+name: Ranking Cron Job
+
+on:
+  schedule:
+    - cron: '30 15 * * *'  # 매일 KST 00:30 (UTC 기준 15:30)
+  workflow_dispatch:
+
+concurrency:
+  group: ranking-scheduler
+  cancel-in-progress: false
+
+jobs:
+  ranking_crong_jon:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Load SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY_WAS1 }}" > ~/.ssh/SSH_KEY_WAS1.key
+          echo "${{ secrets.SSH_KEY_WAS2 }}" > ~/.ssh/SSH_KEY_WAS2.key
+          echo "${{ secrets.SSH_KEY_WAS3 }}" > ~/.ssh/SSH_KEY_WAS3.key
+          chmod 600 ~/.ssh/*.key
+
+      - name: Prod
+        env:
+          SERVER_CONFIG: ${{ secrets.SERVER_CONFIG }}
+          SCHEDULER_API_KEY: ${{ secrets.SCHEDULER_API_KEY }}
+        run: |
+          echo "$SERVER_CONFIG" > server-config.yaml
+          
+          YQ_VERSION=v4.40.5
+          wget https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64 -O /usr/local/bin/yq
+          chmod +x /usr/local/bin/yq
+          yq --version
+          
+          export PATH=$PATH:~/bin
+          
+          readarray -t server_names < <(yq e 'keys | .[]' server-config.yaml)
+          
+          random_index=$((RANDOM % ${#server_names[@]}))
+          
+          chosen_name=${server_names[$random_index]}
+          
+          ip=$(yq e ".\"$chosen_name\".ip" server-config.yaml)
+          keyname=$(yq e ".\"$chosen_name\".key" server-config.yaml)
+          
+          echo "🔁 Randomly selected server: $chosen_name ($ip)"
+          
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/${keyname}.key opc@$ip "
+          echo '[INFO] Calling internal API on $ip...'
+          curl -f -X PUT http://localhost:8081/api/v1/scheduler/contributions/analyze?schedulerApiKey=$SCHEDULER_API_KEY || (echo '[ERROR] API 실패'; exit 1)
+          "  

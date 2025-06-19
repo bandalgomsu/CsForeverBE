@@ -60,3 +60,16 @@ CREATE TABLE IF NOT EXISTS term
     primary key (id),
     UNIQUE KEY uq_term (term)
 );
+
+CREATE TABLE IF NOT EXISTS contribution
+(
+    id         bigint       not null AUTO_INCREMENT,
+    user_id    bigint       not null,
+    count      bigint       not null,
+    date       timestamp(6) not null,
+    created_at timestamp(6),
+    updated_at timestamp(6),
+    primary key (id),
+    UNIQUE KEY uq_user_date (user_id, date)
+);
+
