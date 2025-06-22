@@ -1,4 +1,4 @@
-name: Ranking Cron Job
+name: Contribution Cron Job
 
 on:
   schedule:
