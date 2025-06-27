@@ -26,5 +26,10 @@ enum class QuestionTag(val displayName: String) {
     MSA("MSA"),
     FLUTTER("Flutter"),
     AI("AI"),
+    GO("Go"),
+    RUBY("Ruby"),
+    REDIS("Redis"),
+    AWS("AWS"),
+    BLOCK_CHAIN("Block Chain"),
     ;
 }
