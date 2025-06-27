@@ -1,7 +1,8 @@
 package com.csforever.app.ranking.implement
 
 import com.csforever.app.ranking.RankingTestUtil
-import com.csforever.app.ranking.dao.RankingDao
+import com.csforever.app.domain.ranking.dao.RankingDao
+import com.csforever.app.domain.ranking.implement.RankingFinder
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

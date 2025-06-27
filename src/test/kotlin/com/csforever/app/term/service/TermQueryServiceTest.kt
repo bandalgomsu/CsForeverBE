@@ -1,7 +1,8 @@
 package com.csforever.app.term.service
 
-import com.csforever.app.term.implement.TermFinder
-import com.csforever.app.term.model.Term
+import com.csforever.app.domain.term.implement.TermFinder
+import com.csforever.app.domain.term.model.Term
+import com.csforever.app.domain.term.service.TermQueryService
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

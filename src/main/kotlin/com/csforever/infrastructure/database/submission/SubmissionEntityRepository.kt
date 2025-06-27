@@ -1,8 +1,8 @@
 package com.csforever.infrastructure.database.submission
 
 import com.csforever.app.common.pagination.PageResponse
-import com.csforever.app.submission.dao.SubmissionDao
-import com.csforever.app.submission.model.Submission
+import com.csforever.app.domain.user.submission.dao.SubmissionDao
+import com.csforever.app.domain.user.submission.model.Submission
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.springframework.stereotype.Repository

@@ -1,17 +1,18 @@
 package com.csforever.app.auth.service
 
-import com.csforever.app.auth.dto.AuthRequest
-import com.csforever.app.auth.dto.AuthResponse
-import com.csforever.app.auth.dto.TokenResponse
-import com.csforever.app.auth.exception.AuthErrorCode
-import com.csforever.app.auth.implement.EmailVerificationHandler
-import com.csforever.app.auth.implement.TokenHandler
+import com.csforever.app.domain.user.auth.dto.AuthRequest
+import com.csforever.app.domain.user.auth.dto.AuthResponse
+import com.csforever.app.domain.user.auth.dto.TokenResponse
+import com.csforever.app.domain.user.auth.exception.AuthErrorCode
+import com.csforever.app.domain.user.auth.implement.EmailVerificationHandler
+import com.csforever.app.domain.user.auth.implement.TokenHandler
 import com.csforever.app.common.crypto.CryptoUtil
 import com.csforever.app.common.exception.BusinessException
+import com.csforever.app.domain.user.auth.service.AuthService
 import com.csforever.app.user.UserTestUtil
-import com.csforever.app.user.implement.UserExistChecker
-import com.csforever.app.user.implement.UserFinder
-import com.csforever.app.user.implement.UserInserter
+import com.csforever.app.domain.user.profile.implement.UserExistChecker
+import com.csforever.app.domain.user.profile.implement.UserFinder
+import com.csforever.app.domain.user.profile.implement.UserInserter
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -228,7 +229,7 @@ class AuthServiceTest {
             career = user.career,
             position = user.position
         )
-        
+
         coEvery { emailVerificationHandler.checkVerifiedEmail(request.email) } returns Unit
         coEvery { userExistChecker.isExistByEmail(request.email) } returns true
 

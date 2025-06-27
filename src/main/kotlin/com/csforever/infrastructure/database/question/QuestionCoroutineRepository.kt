@@ -1,6 +1,6 @@
 package com.csforever.infrastructure.database.question
 
-import com.csforever.app.question.model.QuestionTag
+import com.csforever.app.domain.question.model.QuestionTag
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository

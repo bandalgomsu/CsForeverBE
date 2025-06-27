@@ -1,6 +1,6 @@
 package com.csforever.infrastructure.database.user
 
-import com.csforever.app.user.model.Position
+import com.csforever.app.domain.user.profile.model.Position
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 

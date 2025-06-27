@@ -1,7 +1,7 @@
 package com.csforever.infrastructure.database.ranking
 
-import com.csforever.app.ranking.dao.RankingDao
-import com.csforever.app.ranking.model.Ranking
+import com.csforever.app.domain.ranking.dao.RankingDao
+import com.csforever.app.domain.ranking.model.Ranking
 import org.springframework.stereotype.Component
 
 @Component

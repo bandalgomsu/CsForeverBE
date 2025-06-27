@@ -2,8 +2,9 @@ package com.csforever.app.user.implement
 
 import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.user.UserTestUtil
-import com.csforever.app.user.dao.UserDao
-import com.csforever.app.user.exception.UserErrorCode
+import com.csforever.app.domain.user.profile.dao.UserDao
+import com.csforever.app.domain.user.profile.exception.UserErrorCode
+import com.csforever.app.domain.user.profile.implement.UserFinder
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

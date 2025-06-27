@@ -1,7 +1,7 @@
 package com.csforever.app.ranking
 
-import com.csforever.app.ranking.model.Ranking
-import com.csforever.app.ranking.model.RankingType
+import com.csforever.app.domain.ranking.model.Ranking
+import com.csforever.app.domain.ranking.model.RankingType
 
 class RankingTestUtil {
     companion object {

@@ -1,7 +1,7 @@
 package com.csforever.infrastructure.database.contribution
 
-import com.csforever.app.contribution.dao.ContributionDao
-import com.csforever.app.contribution.model.Contribution
+import com.csforever.app.domain.user.contribution.dao.ContributionDao
+import com.csforever.app.domain.user.contribution.model.Contribution
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 

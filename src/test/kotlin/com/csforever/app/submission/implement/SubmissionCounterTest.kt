@@ -1,6 +1,7 @@
 package com.csforever.app.submission.implement
 
-import com.csforever.app.submission.dao.SubmissionDao
+import com.csforever.app.domain.user.submission.dao.SubmissionDao
+import com.csforever.app.domain.user.submission.implement.SubmissionCounter
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

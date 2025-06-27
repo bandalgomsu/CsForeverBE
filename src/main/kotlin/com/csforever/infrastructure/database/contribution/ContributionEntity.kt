@@ -1,6 +1,6 @@
 package com.csforever.infrastructure.database.contribution
 
-import com.csforever.app.contribution.model.Contribution
+import com.csforever.app.domain.user.contribution.model.Contribution
 import com.csforever.infrastructure.database.BaseEntity
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table

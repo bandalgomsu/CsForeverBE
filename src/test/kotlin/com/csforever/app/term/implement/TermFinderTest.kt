@@ -5,10 +5,11 @@ import com.csforever.app.common.llm.LLMClient
 import com.csforever.app.common.llm.LLMErrorCode
 import com.csforever.app.common.redis.RedisClient
 import com.csforever.app.common.redis.RedisKey
-import com.csforever.app.term.dao.TermDao
-import com.csforever.app.term.dto.TermResponse
-import com.csforever.app.term.model.LLMTermCreateCommand
-import com.csforever.app.term.model.Term
+import com.csforever.app.domain.term.dao.TermDao
+import com.csforever.app.domain.term.implement.TermFinder
+import com.csforever.app.domain.term.dto.TermResponse
+import com.csforever.app.domain.term.model.LLMTermCreateCommand
+import com.csforever.app.domain.term.model.Term
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

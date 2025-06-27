@@ -1,7 +1,7 @@
 package com.csforever.infrastructure.database.ranking
 
-import com.csforever.app.ranking.model.Ranking
-import com.csforever.app.ranking.model.RankingType
+import com.csforever.app.domain.ranking.model.Ranking
+import com.csforever.app.domain.ranking.model.RankingType
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime

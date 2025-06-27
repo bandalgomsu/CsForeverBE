@@ -1,7 +1,7 @@
 package com.csforever.infrastructure.database.question
 
-import com.csforever.app.question.model.Question
-import com.csforever.app.question.model.QuestionTag
+import com.csforever.app.domain.question.model.Question
+import com.csforever.app.domain.question.model.QuestionTag
 import com.csforever.infrastructure.database.BaseEntity
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column

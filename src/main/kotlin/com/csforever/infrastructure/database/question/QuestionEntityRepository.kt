@@ -1,8 +1,8 @@
 package com.csforever.infrastructure.database.question
 
-import com.csforever.app.question.dao.QuestionDao
-import com.csforever.app.question.model.Question
-import com.csforever.app.question.model.QuestionTag
+import com.csforever.app.domain.question.dao.QuestionDao
+import com.csforever.app.domain.question.model.Question
+import com.csforever.app.domain.question.model.QuestionTag
 import kotlinx.coroutines.flow.toList
 import org.springframework.stereotype.Repository
 

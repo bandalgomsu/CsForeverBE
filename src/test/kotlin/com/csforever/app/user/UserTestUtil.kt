@@ -1,9 +1,9 @@
 package com.csforever.app.user
 
-import com.csforever.app.user.dto.UserProfileResponse
-import com.csforever.app.user.model.Position
-import com.csforever.app.user.model.Role
-import com.csforever.app.user.model.User
+import com.csforever.app.domain.user.profile.dto.UserProfileResponse
+import com.csforever.app.domain.user.profile.model.Position
+import com.csforever.app.domain.user.profile.model.Role
+import com.csforever.app.domain.user.profile.model.User
 
 class UserTestUtil {
     companion object {

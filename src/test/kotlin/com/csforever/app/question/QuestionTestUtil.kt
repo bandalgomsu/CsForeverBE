@@ -1,7 +1,7 @@
 package com.csforever.app.question
 
-import com.csforever.app.question.model.Question
-import com.csforever.app.question.model.QuestionTag
+import com.csforever.app.domain.question.model.Question
+import com.csforever.app.domain.question.model.QuestionTag
 
 class QuestionTestUtil {
     companion object {

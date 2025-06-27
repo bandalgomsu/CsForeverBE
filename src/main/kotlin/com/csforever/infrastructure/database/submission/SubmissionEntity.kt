@@ -1,6 +1,6 @@
 package com.csforever.infrastructure.database.submission
 
-import com.csforever.app.submission.model.Submission
+import com.csforever.app.domain.user.submission.model.Submission
 import com.csforever.infrastructure.database.BaseEntity
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column

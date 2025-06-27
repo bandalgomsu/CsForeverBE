@@ -1,8 +1,9 @@
 package com.csforever.app.user.implement
 
 import com.csforever.app.user.UserTestUtil
-import com.csforever.app.user.dao.UserDao
-import com.csforever.app.user.model.Position
+import com.csforever.app.domain.user.profile.dao.UserDao
+import com.csforever.app.domain.user.profile.model.Position
+import com.csforever.app.domain.user.profile.implement.UserUpdater
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

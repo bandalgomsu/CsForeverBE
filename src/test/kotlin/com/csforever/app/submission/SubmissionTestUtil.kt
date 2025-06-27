@@ -1,6 +1,6 @@
 package com.csforever.app.submission
 
-import com.csforever.app.submission.model.Submission
+import com.csforever.app.domain.user.submission.model.Submission
 
 class SubmissionTestUtil {
     companion object {

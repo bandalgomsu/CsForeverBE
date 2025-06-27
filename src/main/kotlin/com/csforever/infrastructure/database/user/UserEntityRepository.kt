@@ -1,8 +1,8 @@
 package com.csforever.infrastructure.database.user
 
-import com.csforever.app.user.dao.UserDao
-import com.csforever.app.user.model.Position
-import com.csforever.app.user.model.User
+import com.csforever.app.domain.user.profile.dao.UserDao
+import com.csforever.app.domain.user.profile.model.Position
+import com.csforever.app.domain.user.profile.model.User
 import org.springframework.stereotype.Repository
 
 @Repository

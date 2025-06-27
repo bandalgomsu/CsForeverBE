@@ -1,7 +1,8 @@
 package com.csforever.app.submission.implement
 
+import com.csforever.app.domain.user.submission.dao.SubmissionDao
+import com.csforever.app.domain.user.submission.implement.SubmissionInserter
 import com.csforever.app.submission.SubmissionTestUtil
-import com.csforever.app.submission.dao.SubmissionDao
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -27,7 +28,7 @@ class SubmissionInserterTest {
             isCorrect = submission.isCorrect,
             feedback = submission.feedback
         )
-        
+
         assert(response.userId == submission.userId)
         assert(response.questionId == submission.questionId)
         assert(response.answer == submission.answer)

@@ -1,6 +1,6 @@
 package com.csforever.infrastructure.database.term
 
-import com.csforever.app.term.model.Term
+import com.csforever.app.domain.term.model.Term
 import com.csforever.infrastructure.database.BaseEntity
 import org.springframework.data.relational.core.mapping.Table
 

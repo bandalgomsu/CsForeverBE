@@ -1,7 +1,7 @@
 package com.csforever.infrastructure.database.term
 
-import com.csforever.app.term.dao.TermDao
-import com.csforever.app.term.model.Term
+import com.csforever.app.domain.term.dao.TermDao
+import com.csforever.app.domain.term.model.Term
 import org.springframework.stereotype.Repository
 
 @Repository

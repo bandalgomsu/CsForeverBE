@@ -1,11 +1,12 @@
 package com.csforever.app.auth.implement
 
-import com.csforever.app.auth.exception.AuthErrorCode
-import com.csforever.app.auth.model.UserAuthorizationContext
+import com.csforever.app.domain.user.auth.exception.AuthErrorCode
+import com.csforever.app.domain.user.auth.model.UserAuthorizationContext
 import com.csforever.app.common.exception.BusinessException
 import com.csforever.app.common.redis.RedisClient
+import com.csforever.app.domain.user.auth.implement.TokenHandler
 import com.csforever.app.user.UserTestUtil
-import com.csforever.app.user.model.Role
+import com.csforever.app.domain.user.profile.model.Role
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

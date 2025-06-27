@@ -1,6 +1,7 @@
 package com.csforever.app.user.implement
 
-import com.csforever.app.user.dao.UserDao
+import com.csforever.app.domain.user.profile.dao.UserDao
+import com.csforever.app.domain.user.profile.implement.UserExistChecker
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
