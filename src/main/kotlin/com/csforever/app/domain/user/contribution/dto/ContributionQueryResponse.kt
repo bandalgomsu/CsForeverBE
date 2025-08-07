@@ -7,6 +7,7 @@ class ContributionQueryResponse {
 
     data class ContributionInfos(
         val contributions: List<ContributionInfo>,
+        val continuosDay: Int = 0,
     )
 
     data class ContributionInfo(

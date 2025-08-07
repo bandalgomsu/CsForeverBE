@@ -22,6 +22,20 @@ class ContributionQueryService(
             ContributionQueryResponse.ContributionInfo.createByContribution(it)
         }
 
-        return ContributionQueryResponse.ContributionInfos(contributionInfos)
+        val contributionDates = contributionInfos
+            .map { it.date }
+            .toSet()
+            .sortedDescending()
+
+        var continuosDay = 0
+        var currentDate = LocalDate.now().minusDays(1);
+
+        // 오늘부터 역순으로 연속된 날짜 확인
+        while (contributionDates.contains(currentDate)) {
+            continuosDay++
+            currentDate = currentDate.minusDays(1)
+        }
+
+        return ContributionQueryResponse.ContributionInfos(contributionInfos, continuosDay)
     }
 }
