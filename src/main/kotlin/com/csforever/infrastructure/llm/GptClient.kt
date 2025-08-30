@@ -44,8 +44,16 @@ class GptClient(
             .bodyToMono<Map<String, Any>>()
             .awaitSingle()
 
-        val jsonText = command.extractFunc(response)
+        val jsonText = parse(response)
 
         return objectMapper.readValue(jsonText, command.returnType)
+    }
+
+    private fun parse(jsonMap: Map<String, Any>): String {
+        val output = jsonMap["output"] as? List<Map<String, Any>> ?: error("Invalid response format")
+        val content = output[0]["content"] as? List<Map<String, Any>> ?: error("Missing content")
+        val text = content[0] as? Map<String, Any> ?: error("Missing text")
+
+        return text["text"] as? String ?: error("Missing response")
     }
 }

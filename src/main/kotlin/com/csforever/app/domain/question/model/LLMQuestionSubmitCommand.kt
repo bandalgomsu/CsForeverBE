@@ -1,15 +1,13 @@
 package com.csforever.app.domain.question.model
 
 import com.csforever.app.common.llm.LLMCommand
-import com.csforever.app.common.llm.LLMModel
 import com.csforever.app.domain.question.dto.QuestionCommandResponse
 
-class LLMQuestionSubmitCommand(
+data class LLMQuestionSubmitCommand(
     val question: String,
     val answer: String,
     val bestAnswer: String,
     val userNickname: String = "훌륭한 개발자",
-    val llmModel: LLMModel = LLMModel.GEMINI
 ) : LLMCommand<QuestionCommandResponse.QuestionSubmitResponse>(
     body = """
             {
@@ -44,33 +42,5 @@ class LLMQuestionSubmitCommand(
             }
              
         """.trimIndent(),
-    extractFunc = fun(jsonMap: Map<String, Any>): String {
-        if (llmModel == LLMModel.GPT_4_1_MINI) {
-            return parseGptMini(jsonMap)
-        }
-
-        return parseGemini(jsonMap)
-    },
     returnType = QuestionCommandResponse.QuestionSubmitResponse::class.java
-) {
-}
-
-fun parseGemini(jsonMap: Map<String, Any>): String {
-    val candidates = jsonMap["candidates"] as? List<Map<String, Any>> ?: error("Invalid response format")
-    val content = candidates.firstOrNull()?.get("content") as? Map<*, *> ?: error("Missing content")
-    val parts = content["parts"] as? List<Map<*, *>> ?: error("Missing parts")
-    val text = parts.firstOrNull()?.get("text") as? String ?: error("Missing text")
-
-    return text
-        .replace("```json", "") // JSON 시작 부분 제거
-        .replace("```", "") // JSON 끝 부분 제거
-        .trim() // 양쪽 공백 제거
-}
-
-fun parseGptMini(jsonMap: Map<String, Any>): String {
-    val output = jsonMap["output"] as? List<Map<String, Any>> ?: error("Invalid response format")
-    val content = output[0]["content"] as? List<Map<String, Any>> ?: error("Missing content")
-    val text = content[0] as? Map<String, Any> ?: error("Missing text")
-
-    return text["text"] as? String ?: error("Missing response")
-}
+)

@@ -40,8 +40,20 @@ class GeminiClient(
             .bodyToMono<Map<String, Any>>()
             .awaitSingle()
 
-        val jsonText = command.extractFunc(response)
+        val jsonText = parse(response)
 
         return objectMapper.readValue(jsonText, command.returnType)
+    }
+
+    private fun parse(jsonMap: Map<String, Any>): String {
+        val candidates = jsonMap["candidates"] as? List<Map<String, Any>> ?: error("Invalid response format")
+        val content = candidates.firstOrNull()?.get("content") as? Map<*, *> ?: error("Missing content")
+        val parts = content["parts"] as? List<Map<*, *>> ?: error("Missing parts")
+        val text = parts.firstOrNull()?.get("text") as? String ?: error("Missing text")
+
+        return text
+            .replace("```json", "") // JSON 시작 부분 제거
+            .replace("```", "") // JSON 끝 부분 제거
+            .trim() // 양쪽 공백 제거
     }
 }
