@@ -73,3 +73,17 @@ CREATE TABLE IF NOT EXISTS contribution
     UNIQUE KEY uq_user_date (user_id, date)
 );
 
+CREATE TABLE IF NOT EXISTS donation
+(
+    id          bigint      not null AUTO_INCREMENT,
+    question    varchar(50) not null,
+    best_answer varchar(300),
+    tag         varchar(50) not null,
+    question_id bigint,
+    user_id     bigint      not null,
+    created_at  timestamp(6),
+    updated_at  timestamp(6),
+    primary key (id)
+);
+
+

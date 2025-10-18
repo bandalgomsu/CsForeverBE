@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 abstract class BaseEntity(
     @CreatedDate
-    var createdAt: LocalDateTime? = null,
+    open var createdAt: LocalDateTime? = null,
     @LastModifiedDate
-    var updatedAt: LocalDateTime? = null,
+    open var updatedAt: LocalDateTime? = null,
 )

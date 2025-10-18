@@ -10,4 +10,14 @@ class PageResponse<T>(
     @JsonProperty("currentPage") val currentPage: Int,
     @JsonProperty("pageSize") val pageSize: Int,
 ) : Serializable {
+
+    fun <K> transform(newResult: List<K>): PageResponse<K> {
+        return PageResponse(
+            results = newResult,
+            totalPages = this.totalPages,
+            totalElements = this.totalElements,
+            currentPage = this.currentPage,
+            pageSize = this.pageSize
+        )
+    }
 }
