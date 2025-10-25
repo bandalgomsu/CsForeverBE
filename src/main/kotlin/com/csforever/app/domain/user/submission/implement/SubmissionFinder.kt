@@ -39,4 +39,16 @@ class SubmissionFinder(
             page = page
         )
     }
+
+    suspend fun findAllByUserIdAndQuestionIdIn(
+        userId: Long,
+        questionIds: List<Long>,
+        isCorrect: Boolean
+    ): List<Submission> {
+        return submissionDao.findAllByUserIdAndIsCorrectAndQuestionIdIn(
+            userId = userId,
+            questionIds = questionIds,
+            isCorrect = isCorrect
+        )
+    }
 }

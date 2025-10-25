@@ -33,4 +33,10 @@ interface SubmissionDao {
         size: Int = 5,
         page: Int = 1
     ): PageResponse<Submission>
+
+    suspend fun findAllByUserIdAndIsCorrectAndQuestionIdIn(
+        userId: Long,
+        questionIds: List<Long>,
+        isCorrect: Boolean
+    ): List<Submission>
 }

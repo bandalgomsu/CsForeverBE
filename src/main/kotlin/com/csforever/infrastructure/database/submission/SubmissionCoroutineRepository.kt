@@ -69,4 +69,9 @@ interface SubmissionCoroutineRepository : CoroutineCrudRepository<SubmissionEnti
         questionIds: List<Long>
     ): Long
 
+    suspend fun findAllByUserIdAndIsCorrectAndQuestionIdIn(
+        userId: Long,
+        isCorrect: Boolean,
+        questionIds: List<Long>,
+    ): List<SubmissionEntity>
 }

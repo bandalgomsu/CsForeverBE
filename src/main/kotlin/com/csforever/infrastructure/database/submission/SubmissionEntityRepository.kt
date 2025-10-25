@@ -6,7 +6,6 @@ import com.csforever.app.domain.user.submission.model.Submission
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.springframework.stereotype.Repository
-import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class SubmissionEntityRepository(
@@ -49,7 +48,6 @@ class SubmissionEntityRepository(
         )
     }
 
-    @Transactional(readOnly = true)
     override suspend fun findPageByUserIdAndIsCorrect(
         userId: Long,
         isCorrect: Boolean,
@@ -129,5 +127,17 @@ class SubmissionEntityRepository(
             currentPage = page,
             pageSize = size,
         )
+    }
+
+    override suspend fun findAllByUserIdAndIsCorrectAndQuestionIdIn(
+        userId: Long,
+        questionIds: List<Long>,
+        isCorrect: Boolean
+    ): List<Submission> {
+        return submissionCoroutineRepository.findAllByUserIdAndIsCorrectAndQuestionIdIn(
+            userId = userId,
+            questionIds = questionIds,
+            isCorrect = isCorrect
+        ).map { it.toModel() }
     }
 }

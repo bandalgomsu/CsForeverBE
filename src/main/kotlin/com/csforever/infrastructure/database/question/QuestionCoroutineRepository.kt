@@ -20,6 +20,16 @@ interface QuestionCoroutineRepository : CoroutineCrudRepository<QuestionEntity, 
 
     @Query(
         """
+        SELECT * FROM question
+        WHERE tag = :tag
+        LIMIT :size OFFSET :offset
+    """
+    )
+    suspend fun findPageByTag(size: Int, offset: Int, tag: QuestionTag): List<QuestionEntity>
+
+
+    @Query(
+        """
         SELECT id FROM question
         WHERE tag = :tag
     """
@@ -28,4 +38,6 @@ interface QuestionCoroutineRepository : CoroutineCrudRepository<QuestionEntity, 
 
     suspend fun findAllByIdIn(questionIds: List<Long>): Flow<QuestionEntity>
     suspend fun findAllByTagAndIdIn(tag: QuestionTag, questionIds: List<Long>): Flow<QuestionEntity>
+
+    suspend fun countAllByTag(tag: QuestionTag): Long
 }
