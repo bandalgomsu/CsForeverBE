@@ -21,7 +21,7 @@ class GeminiClient(
 
     override suspend fun <T> requestByCommand(command: LLMCommand<T>): T {
         val webClient = WebClient.builder()
-            .baseUrl("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}")
+            .baseUrl("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}")
             .defaultHeader("Content-Type", "application/json")
             .build()
 
